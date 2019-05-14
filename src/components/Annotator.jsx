@@ -1,7 +1,9 @@
 import React from 'react';
 import Annotation from "./Annotation";
 
-const API_ROOT = 'http://localhost:5000/';
+
+const hostname = window.location.hostname;
+const API_ROOT = `http://${hostname}:5000/`;
 
 const availableTypes = [
   'aanvraag',
@@ -81,8 +83,9 @@ class Annotator extends React.Component {
     }
   }
 
-  _onIndexChange(event) {
+  _onBlur(event) {
     const value = event.target.value;
+    event.target.value= "";
 
     if (value >= 0 && value < this.state.items.length) {
       this.setState({ currentIndex: value });
@@ -91,14 +94,15 @@ class Annotator extends React.Component {
 
   componentDidMount() {
     getAnnotationList().then(items => {
-      const currentIndex = 600;
+      const currentIndex = 800;
       this.setState({
         items,
         currentIndex,
       })
     });
 
-    document.addEventListener('keydown', (event) => {
+    const element = document;
+    element.addEventListener('keydown', (event) => {
       const key = event.key || event.keyCode;
       if (key === ' ') {
         event.preventDefault();
@@ -106,7 +110,7 @@ class Annotator extends React.Component {
       }
     });
 
-    document.addEventListener('keyup', (event) => {
+    element.addEventListener('keyup', (event) => {
       if (event.defaultPrevented) {
         return;
       }
@@ -131,11 +135,11 @@ class Annotator extends React.Component {
         if (key === 'Escape') {
           this._updateType('');
         }
-        if (key === '+') {
+        if (key === '+' || key === '=' | key === ',') {
           this._changeType(item.document_type, 1);
         }
 
-        if (key === '-') {
+        if (key === '-' || key === '.') {
           this._changeType(item.document_type, -1);
         }
 
@@ -164,12 +168,15 @@ class Annotator extends React.Component {
     return <div>
       <div className="overlay">
         <ul>
-          <li><span>Current </span><input type="number" min="0" value={currentIndex} onChange={this._onIndexChange.bind(this)} /></li>
+          <li><span>Current </span><span>{currentIndex}</span></li>
+            {/*, jump to: <input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>*/}
           <li><span>Total </span><span>{items && items.length}</span></li>
           <li><span>Document_type </span><span>{item && item.document_type}</span></li>
         </ul>
       </div>
-      { item && <Annotation item={item}/>}
+      <div ref={elem => this.annotationContainer = elem}>
+        { item && <Annotation item={item}/>}
+      </div>
     </div>;
   }
 }
