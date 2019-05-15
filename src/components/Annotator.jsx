@@ -1,6 +1,7 @@
 import React from 'react';
 import Annotation from "./Annotation";
 
+const startIndex = 0;
 
 const hostname = window.location.hostname;
 const API_ROOT = `http://${hostname}:5000/`;
@@ -21,8 +22,14 @@ const availableTypes = [
   // 'bijlage bij beschikking',
 ];
 
-const getAnnotationList = () => {
+const getAnnotationCount = () => {
   const url = API_ROOT;
+  return fetch(url)
+    .then(data => data.json());
+};
+
+const getAnnotation = (index) => {
+  const url = `${API_ROOT}${index}`;
   return fetch(url)
     .then(data => data.json());
 };
@@ -40,24 +47,34 @@ const putAnnotation = (index, value) => {
   })
     .then(response => response.json())
 };
-
-const saveData = () => {
-  const url = `${API_ROOT}save`;
-  return fetch(url, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: 'PUT'
-  })
-    .then(response => response.json())
-};
+//
+// const saveData = () => {
+//   const url = `${API_ROOT}save`;
+//   return fetch(url, {
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json'
+//     },
+//     method: 'PUT'
+//   })
+//     .then(response => response.json())
+// };
 
 class Annotator extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {}
+  }
+
+  _changeAnnotation(index) {
+    getAnnotation(index).then(item => {
+      console.log(item);
+      this.setState({
+        item,
+        currentIndex: index,
+      })
+    });
   }
 
   _updateType(newValue) {
@@ -93,12 +110,11 @@ class Annotator extends React.Component {
   }
 
   componentDidMount() {
-    getAnnotationList().then(items => {
-      const currentIndex = 800;
+    getAnnotationCount().then(data => {
       this.setState({
-        items,
-        currentIndex,
-      })
+        count: data.count
+      });
+      this._changeAnnotation(startIndex);
     });
 
     const element = document;
@@ -117,18 +133,17 @@ class Annotator extends React.Component {
 
       const key = event.key || event.keyCode;
 
-      const { items, currentIndex } = this.state;
-      const item = items && items[currentIndex];
+      const { item, count, currentIndex } = this.state;
 
-      if (key === 'Enter') {
-        console.log('saving');
-        saveData().then(() => console.log('done saving'));
-      }
+      // if (key === 'Enter') {
+      //   console.log('saving');
+      //   saveData().then(() => console.log('done saving'));
+      // }
       if (key === 'ArrowLeft') {
-        this.setState({ currentIndex: Math.max(this.state.currentIndex - 1, 0) })
+        this._changeAnnotation(Math.max(currentIndex - 1, 0));
       }
       if (key === ' ' || key === 'ArrowRight') {
-        this.setState({ currentIndex: Math.min(this.state.currentIndex + 1, items.length) })
+        this._changeAnnotation(Math.min(currentIndex + 1, count));
       }
 
       if (item) {
@@ -163,14 +178,13 @@ class Annotator extends React.Component {
   }
 
   render(){
-    const { currentIndex, items } = this.state;
-    const item = items && items[currentIndex];
+    const { item, count, currentIndex } = this.state;
     return <div>
       <div className="overlay">
         <ul>
           <li><span>Current </span><span>{currentIndex}</span></li>
             {/*, jump to: <input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>*/}
-          <li><span>Total </span><span>{items && items.length}</span></li>
+          <li><span>Total </span><span>{count}</span></li>
           <li><span>Document_type </span><span>{item && item.document_type}</span></li>
         </ul>
       </div>
