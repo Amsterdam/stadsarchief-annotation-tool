@@ -1,12 +1,13 @@
 import React from 'react';
 import Annotation from "./Annotation";
 
-const startIndex = 0;
+const startIndex = 1022;
 
 const hostname = window.location.hostname;
 const API_ROOT = `http://${hostname}:5000/`;
 
 const availableTypes = [
+  '',
   'aanvraag',
   'besluit',
   'correspondentie',
@@ -47,7 +48,7 @@ const putAnnotation = (index, value) => {
   })
     .then(response => response.json())
 };
-//
+
 // const saveData = () => {
 //   const url = `${API_ROOT}save`;
 //   return fetch(url, {
@@ -64,15 +65,21 @@ class Annotator extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      isLoading: false
+    }
   }
 
   _changeAnnotation(index) {
+    this.setState({
+      isLoading: true
+    });
     getAnnotation(index).then(item => {
       console.log(item);
       this.setState({
         item,
         currentIndex: index,
+        isLoading: false
       })
     });
   }
@@ -81,12 +88,10 @@ class Annotator extends React.Component {
     if (newValue.length > 0 && availableTypes.indexOf(newValue) < 0) {
       throw new Error(`unkown type!: ${newValue}`);
     }
-    const { items, currentIndex } = this.state;
+    const { item, currentIndex } = this.state;
     putAnnotation(currentIndex, newValue).then(() => {
-      const item = items[currentIndex];
       item.document_type = newValue;
-      items[currentIndex] = item;
-      this.setState({ items });
+      this.setState({ item });
     }).catch(e => console.error(e));
   }
 
@@ -100,24 +105,32 @@ class Annotator extends React.Component {
     }
   }
 
+  _onSelectChange(event) {
+    this._updateType(event.target.value)
+  }
+
   _onBlur(event) {
     const value = event.target.value;
     event.target.value= "";
+    const index = parseInt(value, 10);
 
-    if (value >= 0 && value < this.state.items.length) {
-      this.setState({ currentIndex: value });
+    if (index >= 0 && index < this.state.count) {
+      this._changeAnnotation(index)
     }
   }
 
   componentDidMount() {
     getAnnotationCount().then(data => {
       this.setState({
-        count: data.count
+        count: data.count,
+        isLoading: true
       });
       this._changeAnnotation(startIndex);
     });
 
-    const element = document;
+    // const element = document;
+    const element = this.annotationContainer;
+    element.focus();
     element.addEventListener('keydown', (event) => {
       const key = event.key || event.keyCode;
       if (key === ' ') {
@@ -178,18 +191,26 @@ class Annotator extends React.Component {
   }
 
   render(){
-    const { item, count, currentIndex } = this.state;
+    const { item, isLoading, count, currentIndex } = this.state;
     return <div>
       <div className="overlay">
         <ul>
-          <li><span>Current </span><span>{currentIndex}</span></li>
-            {/*, jump to: <input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>*/}
+          <li><span>Current </span><span>{currentIndex}, jump to: </span><input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>
           <li><span>Total </span><span>{count}</span></li>
           <li><span>Document_type </span><span>{item && item.document_type}</span></li>
+          <li>
+            <label>
+              Document_type:
+              <select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>
+                { availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }
+              </select>
+            </label>
+          </li>
         </ul>
       </div>
-      <div ref={elem => this.annotationContainer = elem}>
-        { item && <Annotation item={item}/>}
+      { isLoading && <div className="loading-icon"><i className="fa fa-circle-o-notch fa-spin fa-3x"></i></div> }
+      <div tabIndex="0" ref={elem => this.annotationContainer = elem}>
+        {!isLoading && item && <Annotation item={item}/>}
       </div>
     </div>;
   }
