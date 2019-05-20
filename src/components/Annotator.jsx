@@ -23,6 +23,22 @@ const availableTypes = [
   // 'bijlage bij beschikking',
 ];
 
+// const buildURL = ({stadsdeel_code, dossier_nummer, file_naam}) => {
+//   const URL_BASE = '';
+//   const dim = [800, 800];
+//   const document_part = `${stadsdeel_code}/${dossier_nummer}/${filename}`;
+//
+//   const url = `${URL_BASE}${document_encoded}/full/${dim[0]},${dim[1]}/0/default.jpg`;
+//   return url
+// };
+
+const getBakedUrl = ({ iiif_url }) => iiif_url;
+
+const getLocalUrl = ({file_naam: filename}) => {
+  const url = `http://localhost:6543/${filename}`;
+  return url;
+};
+
 const getAnnotationCount = () => {
   const url = API_ROOT;
   return fetch(url)
@@ -192,6 +208,7 @@ class Annotator extends React.Component {
 
   render(){
     const { item, isLoading, count, currentIndex } = this.state;
+    const url = item && getBakedUrl(item);
     return <div>
       <div className="overlay">
         <ul>
@@ -210,7 +227,7 @@ class Annotator extends React.Component {
       </div>
       { isLoading && <div className="loading-icon"><i className="fa fa-circle-o-notch fa-spin fa-3x"></i></div> }
       <div tabIndex="0" ref={elem => this.annotationContainer = elem}>
-        {!isLoading && item && <Annotation item={item}/>}
+        {!isLoading && url && <Annotation url={url}/>}
       </div>
     </div>;
   }

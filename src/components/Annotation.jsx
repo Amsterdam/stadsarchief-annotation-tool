@@ -1,11 +1,16 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
-const Annotation = ({item}) => {
-  // console.log(item);
-  const url = item.iiif_url || 'https://www.amsterdam.nl/publish/pages/858225/logo.png';
-  // const url = 'https://www.amsterdam.nl/publish/pages/858225/logo.png';
-
+const Annotation = ({url}) => {
   return <img src={url} alt='item to label' className="full-img"/>
+};
+
+Annotation.defaultProps = {
+  url: 'https://www.amsterdam.nl/publish/pages/858225/logo.png'
+};
+
+Annotation.propTypes = {
+  url: PropTypes.string
 };
 
 export default Annotation;
