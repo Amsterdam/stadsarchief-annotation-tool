@@ -1,0 +1,14 @@
+.notification {
+    background-color: greenyellow;
+    padding: 1rem;
+
+    margin-left: 0;
+    transition-property: margin-left;
+    transition-duration: 200ms;
+}
+
+.notification.hide {
+    margin-left: -20rem;
+}
+
+

@@ -2,6 +2,7 @@ import React from 'react';
 import Annotation from "./Annotation";
 import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
 import get from 'lodash.get';
+import NotificationArea from "./NotificationArea";
 
 const availableTypes = [
   '',
@@ -31,6 +32,18 @@ class Annotator extends React.Component {
 
     this._changeImageSource = this._changeImageSource.bind(this);
 
+  }
+
+  _addNotification(id, message) {
+    const notifications = [
+      {
+        id,
+        message
+      }
+    ];
+    this.setState({
+      notifications
+    })
   }
 
   _loadCurrentAnnotation() {
@@ -92,6 +105,7 @@ class Annotator extends React.Component {
     meta.checked = true;
     await putAnnotation(currentId, meta);
     this._loadCurrentAnnotation(); // reload
+    this._addNotification(currentId, `${currentId} -> ${meta.type}`);
   }
 
   // _onSelectChange(event) {
@@ -194,7 +208,7 @@ class Annotator extends React.Component {
   }
 
   render() {
-    const { currentId, currentIndex, ids, isLoading, item, useLocalImages } = this.state;
+    const { currentId, currentIndex, ids, isLoading, item, useLocalImages, notifications } = this.state;
     const count = ids && ids.length;
     let url;
     if (item) {
@@ -251,6 +265,10 @@ class Annotator extends React.Component {
           <li><span className='label'>Besluit</span>b</li>
           <li><span className='label'>Other</span>z / o</li>
         </ul>
+      </div>
+
+      <div className="bottom-left">
+        <NotificationArea notifications={notifications} />
       </div>
 
       { isLoading && <div className="loading-icon"><i className="fa fa-circle-o-notch fa-spin fa-3x"></i></div> }

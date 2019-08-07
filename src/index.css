@@ -13,12 +13,18 @@ body {
     margin: 100px auto;
 }
 
+.bottom-left {
+    position: absolute;
+    bottom: 5em;
+    left: 5em;
+}
+
 .overlay {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.2);
     color: white;
     min-width: 30em;
-    padding: 1rem;
+    padding: 1.5rem;
 }
 
 .overlay.controls {
@@ -34,6 +40,10 @@ body {
 .overlay.shortcuts {
     bottom: 5em;
     right: 5em;
+}
+
+.overlay > ul {
+    margin: 0;
 }
 
 .overlay .label {
