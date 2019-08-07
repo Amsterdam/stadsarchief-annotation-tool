@@ -1,4 +1,12 @@
+
+Annotation tool to quickly label images to a specific type.
+Focused on the Stadsarchief bouwdossier use case of distinguishing "bouwaanvragen" from other types.
+
+# Create React App
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+Additional default new react app documentation from Create React app:
 
 ## Available Scripts
 
