@@ -1,10 +1,7 @@
 import React from 'react';
 import Annotation from "./Annotation";
-
-const startIndex = 1022;
-
-const hostname = window.location.hostname;
-const API_ROOT = `http://${hostname}:5000/`;
+import {getAnnotation, getBakedUrl, getExamplesId, putAnnotation} from "../api";
+import get from 'lodash.get';
 
 const availableTypes = [
   '',
@@ -20,62 +17,9 @@ const availableTypes = [
   'aansluitvoorschriften',
   'vergunning',
   'zienswijze',
+  'other',
   // 'bijlage bij beschikking',
 ];
-
-// const buildURL = ({stadsdeel_code, dossier_nummer, file_naam}) => {
-//   const URL_BASE = '';
-//   const dim = [800, 800];
-//   const document_part = `${stadsdeel_code}/${dossier_nummer}/${filename}`;
-//
-//   const url = `${URL_BASE}${document_encoded}/full/${dim[0]},${dim[1]}/0/default.jpg`;
-//   return url
-// };
-
-const getBakedUrl = ({ iiif_url }) => iiif_url;
-
-const getLocalUrl = ({file_naam: filename}) => {
-  const url = `http://localhost:6543/${filename}`;
-  return url;
-};
-
-const getAnnotationCount = () => {
-  const url = API_ROOT;
-  return fetch(url)
-    .then(data => data.json());
-};
-
-const getAnnotation = (index) => {
-  const url = `${API_ROOT}${index}`;
-  return fetch(url)
-    .then(data => data.json());
-};
-
-const putAnnotation = (index, value) => {
-  const url = `${API_ROOT}put/${index}`;
-  const data = JSON.stringify({ "document_type": value});
-  return fetch(url, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: 'PUT',
-    body: data
-  })
-    .then(response => response.json())
-};
-
-// const saveData = () => {
-//   const url = `${API_ROOT}save`;
-//   return fetch(url, {
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json'
-//     },
-//     method: 'PUT'
-//   })
-//     .then(response => response.json())
-// };
 
 class Annotator extends React.Component {
   constructor(props) {
@@ -86,29 +30,47 @@ class Annotator extends React.Component {
     }
   }
 
-  _changeAnnotation(index) {
+  _loadCurrentAnnotation() {
+    const { currentId } = this.state;
     this.setState({
+      item: undefined,
       isLoading: true
     });
-    getAnnotation(index).then(item => {
+    getAnnotation(currentId).then(item => {
       console.log(item);
       this.setState({
         item,
-        currentIndex: index,
         isLoading: false
       })
     });
   }
 
+  _changeAnnotation(index) {
+    const { ids } = this.state;
+
+    if (index < 0 || index >= ids.length) {
+      console.warn(`index outside of range: ${index}`);
+    } else {
+      const id = ids[index];
+
+      this.setState({
+        currentIndex: index,
+        currentId: id
+      });
+
+      this._loadCurrentAnnotation();
+    }
+  }
+
   _updateType(newValue) {
     if (newValue.length > 0 && availableTypes.indexOf(newValue) < 0) {
-      throw new Error(`unkown type!: ${newValue}`);
+      throw new Error(`unknown type!: ${newValue}`);
     }
-    const { item, currentIndex } = this.state;
-    putAnnotation(currentIndex, newValue).then(() => {
-      item.document_type = newValue;
-      this.setState({ item });
-    }).catch(e => console.error(e));
+    const { item } = this.state;
+    item.meta.type = newValue;
+    this.setState({
+      item
+    });
   }
 
   _changeType(currentValue, direction) {
@@ -121,30 +83,37 @@ class Annotator extends React.Component {
     }
   }
 
-  _onSelectChange(event) {
-    this._updateType(event.target.value)
+  async _commitChanges() {
+    const { currentId, item } = this.state;
+    const { meta } = item;
+    meta.checked = true;
+    await putAnnotation(currentId, meta);
+    this._loadCurrentAnnotation(); // reload
   }
 
-  _onBlur(event) {
-    const value = event.target.value;
-    event.target.value= "";
-    const index = parseInt(value, 10);
-
-    if (index >= 0 && index < this.state.count) {
-      this._changeAnnotation(index)
-    }
-  }
+  // _onSelectChange(event) {
+  //   this._updateType(event.target.value)
+  // }
+  //
+  // _onBlur(event) {
+  //   const value = event.target.value;
+  //   event.target.value= "";
+  //   const index = parseInt(value, 10);
+  //
+  //   if (index >= 0 && index < this.state.count) {
+  //     this._changeAnnotation(index)
+  //   }
+  // }
 
   componentDidMount() {
-    getAnnotationCount().then(data => {
+    getExamplesId().then(ids => {
       this.setState({
-        count: data.count,
-        isLoading: true
+        ids
       });
-      this._changeAnnotation(startIndex);
+
+      this._changeAnnotation(0);
     });
 
-    // const element = document;
     const element = this.annotationContainer;
     element.focus();
     element.addEventListener('keydown', (event) => {
@@ -162,17 +131,17 @@ class Annotator extends React.Component {
 
       const key = event.key || event.keyCode;
 
-      const { item, count, currentIndex } = this.state;
+      const { item, currentIndex } = this.state;
 
-      // if (key === 'Enter') {
-      //   console.log('saving');
-      //   saveData().then(() => console.log('done saving'));
-      // }
       if (key === 'ArrowLeft') {
-        this._changeAnnotation(Math.max(currentIndex - 1, 0));
+        this._changeAnnotation(currentIndex - 1);
       }
-      if (key === ' ' || key === 'ArrowRight') {
-        this._changeAnnotation(Math.min(currentIndex + 1, count));
+      if (key === 'ArrowRight') {
+        this._changeAnnotation(currentIndex + 1);
+      }
+      if (key === ' ') {
+        this._commitChanges();
+        this._changeAnnotation(currentIndex + 1);
       }
 
       if (item) {
@@ -180,19 +149,29 @@ class Annotator extends React.Component {
           this._updateType('');
         }
         if (key === '+' || key === '=' | key === ',') {
-          this._changeType(item.document_type, 1);
+          this._changeType(item.meta.type, 1);
         }
 
         if (key === '-' || key === '.') {
-          this._changeType(item.document_type, -1);
+          this._changeType(item.meta.type, -1);
         }
 
         if (key === 'a') {
           this._updateType('aanvraag');
+          this._commitChanges();
+          this._changeAnnotation(currentIndex + 1);
         }
 
         if (key === 'b') {
           this._updateType('besluit');
+          this._commitChanges();
+          this._changeAnnotation(currentIndex + 1);
+        }
+
+        if (key === 'o' || key === 'z') {
+          this._updateType('other');
+          this._commitChanges();
+          this._changeAnnotation(currentIndex + 1);
         }
 
         let keyCode = event.keyCode;
@@ -202,29 +181,45 @@ class Annotator extends React.Component {
           this._updateType(availableTypes[idx]);
         }
       }
-
     });
   }
 
-  render(){
-    const { item, isLoading, count, currentIndex } = this.state;
+  render() {
+    const { ids, isLoading, currentId, currentIndex, item } = this.state;
+    const count = ids && ids.length;
     const url = item && getBakedUrl(item);
+
     return <div>
-      <div className="overlay">
+      <div className="overlay info">
         <ul>
-          <li><span>Current </span><span>{currentIndex}, jump to: </span><input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>
-          <li><span>Total </span><span>{count}</span></li>
-          <li><span>Document_type </span><span>{item && item.document_type}</span></li>
-          <li>
-            <label>
-              Document_type:
-              <select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>
-                { availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }
-              </select>
-            </label>
-          </li>
+          <li><span className='label'>Current</span>{currentId}</li>
+          {/*<li><span className='label'>Current </span><span>{currentId}, jump to: </span><input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>*/}
+          <li><span className='label'>Index</span> {currentIndex}, out of {count} items</li>
+          <li><span className='label'>Name</span><span>{get(item, 'meta.reference')}</span></li>
+          <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
+          <li><span className='label'>Document_type</span><span>{get(item, 'meta.type')}</span></li>
+          {/*<li>*/}
+            {/*<label>*/}
+              {/*Document_type:*/}
+              {/*<select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>*/}
+                {/*{ availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }*/}
+              {/*</select>*/}
+            {/*</label>*/}
+          {/*</li>*/}
         </ul>
       </div>
+
+      <div className="overlay shortcuts">
+        <ul>
+          <li><span className='label'>Commit</span>space bar</li>
+          <li><span className='label'>Prev/next</span>left/right arrow</li>
+          <li><span className='label'>Clear type</span>escape</li>
+          <li><span className='label'>Aanvraag</span>a</li>
+          <li><span className='label'>Besluit</span>b</li>
+          <li><span className='label'>Other</span>z / o</li>
+        </ul>
+      </div>
+
       { isLoading && <div className="loading-icon"><i className="fa fa-circle-o-notch fa-spin fa-3x"></i></div> }
       <div tabIndex="0" ref={elem => this.annotationContainer = elem}>
         {!isLoading && url && <Annotation url={url}/>}
