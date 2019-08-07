@@ -23,7 +23,6 @@ export const getAnnotation = (index) => {
 export const putAnnotation = (id, value) => {
   const url = `${API_ROOT}${id}`;
   const data = JSON.stringify(value);
-  console.log(data);
   return fetch(url, {
     headers: {
       'Accept': 'application/json',

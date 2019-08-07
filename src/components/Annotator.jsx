@@ -52,7 +52,6 @@ class Annotator extends React.Component {
       isLoading: true
     });
     getAnnotation(id).then(item => {
-      console.log(item);
       this.setState({
         item,
         isLoading: false
@@ -61,7 +60,6 @@ class Annotator extends React.Component {
   }
 
   _changeAnnotation(index) {
-    console.log(`changing to index: ${index}`);
     const { count, ids } = this.state;
 
     if (index < 0 || index >= count) {
