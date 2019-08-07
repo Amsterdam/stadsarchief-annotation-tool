@@ -14,26 +14,31 @@ body {
 }
 
 .overlay {
+    position: absolute;
     background-color: rgba(0, 0, 0, 0.2);
     color: white;
     min-width: 30em;
+    padding: 1rem;
+}
+
+.overlay.controls {
+    top: 5em;
+    left: 5em;
 }
 
 .overlay.info {
-    position: absolute;
     top: 5em;
     right: 5em;
 }
 
 .overlay.shortcuts {
-    position: absolute;
     bottom: 5em;
     right: 5em;
 }
 
 .overlay .label {
     font-weight: bold;
-    margin-right: 2rem;
+    margin-right: 2em;
 }
 
 

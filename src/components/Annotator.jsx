@@ -1,6 +1,6 @@
 import React from 'react';
 import Annotation from "./Annotation";
-import {getAnnotation, getBakedUrl, getExamplesId, putAnnotation} from "../api";
+import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
 import get from 'lodash.get';
 
 const availableTypes = [
@@ -18,7 +18,6 @@ const availableTypes = [
   'vergunning',
   'zienswijze',
   'other',
-  // 'bijlage bij beschikking',
 ];
 
 class Annotator extends React.Component {
@@ -26,8 +25,12 @@ class Annotator extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false
-    }
+      isLoading: false,
+      useLocalImages: false
+    };
+
+    this._changeImageSource = this._changeImageSource.bind(this);
+
   }
 
   _loadCurrentAnnotation() {
@@ -104,6 +107,12 @@ class Annotator extends React.Component {
   //     this._changeAnnotation(index)
   //   }
   // }
+
+  _changeImageSource(e) {
+    this.setState({
+      useLocalImages: e.target.value === 'localhost'
+    })
+  }
 
   componentDidMount() {
     getExamplesId().then(ids => {
@@ -185,11 +194,35 @@ class Annotator extends React.Component {
   }
 
   render() {
-    const { ids, isLoading, currentId, currentIndex, item } = this.state;
+    const { currentId, currentIndex, ids, isLoading, item, useLocalImages } = this.state;
     const count = ids && ids.length;
-    const url = item && getBakedUrl(item);
+    let url;
+    if (item) {
+      if (useLocalImages) {
+        url = getLocalUrl(item.meta);
+      } else {
+        url = getBakedUrl(item);
+      }
+    }
 
     return <div>
+      <div className="overlay controls">
+        <form>
+          <div className="radio">
+            <label>
+              <input type="radio" value="localhost" checked={useLocalImages} onChange={this._changeImageSource}/>
+              localhost:6543
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input type="radio" value="api" checked={!useLocalImages} onChange={this._changeImageSource}/>
+              API defined
+            </label>
+          </div>
+        </form>
+      </div>
+
       <div className="overlay info">
         <ul>
           <li><span className='label'>Current</span>{currentId}</li>
