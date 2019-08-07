@@ -13,9 +13,9 @@ body {
     margin: 100px auto;
 }
 
-.bottom-left {
+.top-left {
     position: absolute;
-    bottom: 5em;
+    top: 5em;
     left: 5em;
 }
 
@@ -28,7 +28,7 @@ body {
 }
 
 .overlay.controls {
-    top: 5em;
+    bottom: 5em;
     left: 5em;
 }
 
@@ -51,6 +51,10 @@ body {
     margin-right: 2em;
 }
 
+.overlay.info input {
+    width: 5em;
+    text-align: right;
+}
 
 .full-img {
     width: 100%;

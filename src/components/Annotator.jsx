@@ -27,7 +27,7 @@ class Annotator extends React.Component {
 
     this.state = {
       isLoading: false,
-      useLocalImages: false
+      useLocalImages: true
     };
 
     this._changeImageSource = this._changeImageSource.bind(this);
@@ -46,13 +46,12 @@ class Annotator extends React.Component {
     })
   }
 
-  _loadCurrentAnnotation() {
-    const { currentId } = this.state;
+  _loadAnnotation(id) {
     this.setState({
       item: undefined,
       isLoading: true
     });
-    getAnnotation(currentId).then(item => {
+    getAnnotation(id).then(item => {
       console.log(item);
       this.setState({
         item,
@@ -62,9 +61,10 @@ class Annotator extends React.Component {
   }
 
   _changeAnnotation(index) {
-    const { ids } = this.state;
+    console.log(`changing to index: ${index}`);
+    const { count, ids } = this.state;
 
-    if (index < 0 || index >= ids.length) {
+    if (index < 0 || index >= count) {
       console.warn(`index outside of range: ${index}`);
     } else {
       const id = ids[index];
@@ -74,7 +74,7 @@ class Annotator extends React.Component {
         currentId: id
       });
 
-      this._loadCurrentAnnotation();
+      this._loadAnnotation(id);
     }
   }
 
@@ -104,23 +104,26 @@ class Annotator extends React.Component {
     const { meta } = item;
     meta.checked = true;
     await putAnnotation(currentId, meta);
-    this._loadCurrentAnnotation(); // reload
+    this._loadAnnotation(currentId); // reload
     this._addNotification(currentId, `${currentId} -> ${meta.type}`);
   }
 
   // _onSelectChange(event) {
   //   this._updateType(event.target.value)
   // }
-  //
-  // _onBlur(event) {
-  //   const value = event.target.value;
-  //   event.target.value= "";
-  //   const index = parseInt(value, 10);
-  //
-  //   if (index >= 0 && index < this.state.count) {
-  //     this._changeAnnotation(index)
-  //   }
-  // }
+
+  _onInfoSubmit(event) {
+    event.preventDefault();
+    let inputElement = event.target.querySelector('input[name="idx"]');
+    const value = inputElement.value;
+    inputElement.value = ""; // clear input field
+
+    const index = parseInt(value, 10);
+
+    if (index >= 0 && index < this.state.count) {
+      this._changeAnnotation(index)
+    }
+  }
 
   _changeImageSource(e) {
     this.setState({
@@ -131,6 +134,7 @@ class Annotator extends React.Component {
   componentDidMount() {
     getExamplesId().then(ids => {
       this.setState({
+        count: ids.length,
         ids
       });
 
@@ -208,8 +212,7 @@ class Annotator extends React.Component {
   }
 
   render() {
-    const { currentId, currentIndex, ids, isLoading, item, useLocalImages, notifications } = this.state;
-    const count = ids && ids.length;
+    const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications } = this.state;
     let url;
     if (item) {
       if (useLocalImages) {
@@ -238,22 +241,23 @@ class Annotator extends React.Component {
       </div>
 
       <div className="overlay info">
-        <ul>
-          <li><span className='label'>Current</span>{currentId}</li>
-          {/*<li><span className='label'>Current </span><span>{currentId}, jump to: </span><input type="number" min="0" onBlur={this._onBlur.bind(this)} /></li>*/}
-          <li><span className='label'>Index</span> {currentIndex}, out of {count} items</li>
-          <li><span className='label'>Name</span><span>{get(item, 'meta.reference')}</span></li>
-          <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
-          <li><span className='label'>Document_type</span><span>{get(item, 'meta.type')}</span></li>
-          {/*<li>*/}
-            {/*<label>*/}
-              {/*Document_type:*/}
-              {/*<select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>*/}
-                {/*{ availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }*/}
-              {/*</select>*/}
-            {/*</label>*/}
-          {/*</li>*/}
-        </ul>
+        <form onSubmit={this._onInfoSubmit.bind(this)}>
+          <ul>
+            <li><span className='label'>Current</span>{currentId}</li>
+            <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
+            <li><span className='label'>Name</span><span>{get(item, 'meta.reference')}</span></li>
+            <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
+            <li><span className='label'>Document_type</span><span>{get(item, 'meta.type')}</span></li>
+            {/*<li>*/}
+              {/*<label>*/}
+                {/*Document_type:*/}
+                {/*<select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>*/}
+                  {/*{ availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }*/}
+                {/*</select>*/}
+              {/*</label>*/}
+            {/*</li>*/}
+          </ul>
+        </form>
       </div>
 
       <div className="overlay shortcuts">
@@ -267,7 +271,7 @@ class Annotator extends React.Component {
         </ul>
       </div>
 
-      <div className="bottom-left">
+      <div className="top-left">
         <NotificationArea notifications={notifications} />
       </div>
 
