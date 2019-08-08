@@ -57,7 +57,14 @@ class Annotator extends React.Component {
       this.setState({
         item,
         isLoading: false
-      })
+      });
+
+      // Code to skip to desired type (or other meta property)
+      // if (item.meta.type !== 'aanvraag') {
+      //   console.count('next');
+      //   const { currentIndex } = this.state;
+      //   this._changeAnnotation(currentIndex + 1)
+      // }
     });
   }
 
