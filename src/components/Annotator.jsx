@@ -226,7 +226,7 @@ class Annotator extends React.Component {
           <div className="radio">
             <label>
               <input type="radio" value="localhost" checked={useLocalImages} onChange={this._changeImageSource}/>
-              localhost:6543
+              localhost:5000
             </label>
           </div>
           <div className="radio">

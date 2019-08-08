@@ -3,7 +3,7 @@ import {API_ROOT} from "./variables";
 export const getBakedUrl = ({ url }) => url;
 
 export const getLocalUrl = ({reference: filename}) => {
-  const url = `http://localhost:6543/${filename}`;
+  const url = `http://localhost:5000/${filename}`;
   return url;
 };
 
