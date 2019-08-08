@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import get from 'lodash.get';
 import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
 import NotificationArea from "./NotificationArea";
+import './Annotator.css';
 
 const availableTypes = [
   '',
@@ -226,8 +227,11 @@ class Annotator extends React.Component {
       }
     }
 
+    const reference = get(item, 'meta.reference');
     const type = get(item, 'meta.type');
-    return <div>
+    const dashedType = type && type.replace(/\s+/g, '-');
+    const noType = reference && (type === '' || type === undefined);
+    return <div className="annotator">
       <div className="overlay controls">
         <form>
           <div className="radio">
@@ -250,9 +254,13 @@ class Annotator extends React.Component {
           <ul>
             <li><span className='label'>Current</span>{currentId}</li>
             <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
-            <li><span className='label'>Name</span><span>{get(item, 'meta.reference')}</span></li>
+            <li><span className='label'>Name</span><span>{reference}</span></li>
             <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
-            <li><span className='label'>Document_type</span><span className={classNames({ highlight: type === 'aanvraag' })}>{type}</span></li>
+            <li>
+              <span className='label'>Document_type</span><span
+                className={classNames('highlight', dashedType, { 'empty': noType })}
+                >{type}</span>
+            </li>
             {/*<li>*/}
               {/*<label>*/}
                 {/*Document_type:*/}
@@ -263,6 +271,12 @@ class Annotator extends React.Component {
             {/*</li>*/}
           </ul>
         </form>
+      </div>
+
+      <div className="overlay eye-catcher">
+        { (type === 'aanvraag' || type === 'unknown' || noType) && <div>
+          <div className={classNames('highlight', dashedType, { 'empty': noType })}>{type}</div>
+        </div> }
       </div>
 
       <div className="overlay shortcuts">

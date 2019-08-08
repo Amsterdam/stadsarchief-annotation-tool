@@ -1,8 +1,11 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import './Annotation.css';
 
 const Annotation = ({url}) => {
-  return <img src={url} alt='item to label' className="full-img"/>
+  return <div className="annotation-container">
+    <img src={url} alt='item to label' className="full-img"/>
+  </div>
 };
 
 Annotation.defaultProps = {

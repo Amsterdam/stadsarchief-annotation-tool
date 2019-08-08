@@ -1,6 +1,6 @@
 .notification {
-    background-color: greenyellow;
-    padding: 1rem;
+    background-color: lightgray;
+    padding: 1.2rem;
 
     margin-left: 0;
     transition-property: margin-left;
@@ -10,5 +10,3 @@
 .notification.hide {
     margin-left: -30rem;
 }
-
-

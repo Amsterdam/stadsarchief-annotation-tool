@@ -1,0 +1,93 @@
+.annotator {
+    background-color: gray;
+}
+
+.loading-icon {
+    text-align: center;
+    margin: 100px auto;
+}
+
+.top-left {
+    position: absolute;
+    top: 5em;
+    left: 5em;
+}
+
+.overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    min-width: 25em;
+    padding: 1.5rem;
+}
+
+.overlay.controls {
+    bottom: 5em;
+    left: 5em;
+}
+
+.overlay.info {
+    top: 5em;
+    right: 5em;
+}
+
+.overlay.shortcuts {
+    bottom: 5em;
+    right: 5em;
+}
+
+.overlay > ul {
+    margin: 0;
+}
+
+.overlay .label {
+    font-weight: bold;
+    margin-right: 2em;
+}
+
+.overlay.info input {
+    width: 5em;
+    text-align: right;
+}
+
+.overlay.eye-catcher {
+    top: 20em;
+    left: 45%;
+    min-width: 0;
+    background-color: unset;
+}
+.overlay.eye-catcher > div {
+    margin-left: -50%;
+}
+
+.full-img {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.highlight {
+    padding: 0.2em 0.5em;
+}
+
+.highlight.aanvraag {
+    background-color: lawngreen;
+    padding: 0.2em 2em;
+    color: black;
+}
+
+.highlight.unknown {
+    background-color: orange;
+    padding-left: 10em;
+    height: 1em;
+}
+
+.highlight.empty {
+    background-color: red;
+    padding-left: 10em;
+    height: 1em;
+}
+
+.eye-catcher .highlight {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
