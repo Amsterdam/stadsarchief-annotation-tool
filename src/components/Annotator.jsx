@@ -1,7 +1,8 @@
 import React from 'react';
 import Annotation from "./Annotation";
-import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
+import classNames from 'classnames';
 import get from 'lodash.get';
+import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
 import NotificationArea from "./NotificationArea";
 
 const availableTypes = [
@@ -51,7 +52,7 @@ class Annotator extends React.Component {
       item: undefined,
       isLoading: true
     });
-    getAnnotation(id).then(item => {
+    return getAnnotation(id).then(item => {
       this.setState({
         item,
         isLoading: false
@@ -102,7 +103,7 @@ class Annotator extends React.Component {
     const { meta } = item;
     meta.checked = true;
     await putAnnotation(currentId, meta);
-    this._loadAnnotation(currentId); // reload
+    await this._loadAnnotation(currentId); // reload
     this._addNotification(currentId, `${currentId} -> ${meta.type}`);
   }
 
@@ -129,18 +130,7 @@ class Annotator extends React.Component {
     })
   }
 
-  componentDidMount() {
-    getExamplesId().then(ids => {
-      this.setState({
-        count: ids.length,
-        ids
-      });
-
-      this._changeAnnotation(0);
-    });
-
-    const element = this.annotationContainer;
-    element.focus();
+  _addListeners(element) {
     element.addEventListener('keydown', (event) => {
       const key = event.key || event.keyCode;
       if (key === ' ') {
@@ -149,7 +139,7 @@ class Annotator extends React.Component {
       }
     });
 
-    element.addEventListener('keyup', (event) => {
+    element.addEventListener('keyup', async (event) => {
       if (event.defaultPrevented) {
         return;
       }
@@ -165,7 +155,7 @@ class Annotator extends React.Component {
         this._changeAnnotation(currentIndex + 1);
       }
       if (key === ' ') {
-        this._commitChanges();
+        await this._commitChanges();
         this._changeAnnotation(currentIndex + 1);
       }
 
@@ -183,19 +173,19 @@ class Annotator extends React.Component {
 
         if (key === 'a') {
           this._updateType('aanvraag');
-          this._commitChanges();
+          await this._commitChanges();
           this._changeAnnotation(currentIndex + 1);
         }
 
         if (key === 'b') {
           this._updateType('besluit');
-          this._commitChanges();
+          await this._commitChanges();
           this._changeAnnotation(currentIndex + 1);
         }
 
         if (key === 'o' || key === 'z') {
           this._updateType('other');
-          this._commitChanges();
+          await this._commitChanges();
           this._changeAnnotation(currentIndex + 1);
         }
 
@@ -209,6 +199,22 @@ class Annotator extends React.Component {
     });
   }
 
+  componentDidMount() {
+    getExamplesId().then(ids => {
+      this.setState({
+        count: ids.length,
+        ids
+      });
+
+      this._changeAnnotation(0);
+    });
+
+    const element = this.annotationContainer;
+    element.focus();
+
+    this._addListeners(element)
+  }
+
   render() {
     const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications } = this.state;
     let url;
@@ -220,6 +226,7 @@ class Annotator extends React.Component {
       }
     }
 
+    const type = get(item, 'meta.type');
     return <div>
       <div className="overlay controls">
         <form>
@@ -245,7 +252,7 @@ class Annotator extends React.Component {
             <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
             <li><span className='label'>Name</span><span>{get(item, 'meta.reference')}</span></li>
             <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
-            <li><span className='label'>Document_type</span><span>{get(item, 'meta.type')}</span></li>
+            <li><span className='label'>Document_type</span><span className={classNames({ highlight: type === 'aanvraag' })}>{type}</span></li>
             {/*<li>*/}
               {/*<label>*/}
                 {/*Document_type:*/}

@@ -56,6 +56,10 @@ body {
     text-align: right;
 }
 
+.info .highlight {
+    background-color: green;
+}
+
 .full-img {
     width: 100%;
     min-height: 100vh;
