@@ -29,11 +29,13 @@ class Annotator extends React.Component {
 
     this.state = {
       isLoading: false,
-      useLocalImages: true
+      useLocalImages: true,
+      showLabel: true,
+      showPrediction: false
     };
 
     this._changeImageSource = this._changeImageSource.bind(this);
-
+    this._changeHighlight = this._changeHighlight.bind(this);
   }
 
   _addNotification(id, message) {
@@ -60,7 +62,8 @@ class Annotator extends React.Component {
       });
 
       // Code to skip to desired type (or other meta property)
-      // if (item.meta.type !== 'aanvraag') {
+      // if (item.meta.type !== 'aanvraag') { // Jump to next aanvraag
+      // if (item.meta.type !== 'unknown') {
       //   console.count('next');
       //   const { currentIndex } = this.state;
       //   this._changeAnnotation(currentIndex + 1)
@@ -135,6 +138,13 @@ class Annotator extends React.Component {
   _changeImageSource(e) {
     this.setState({
       useLocalImages: e.target.value === 'localhost'
+    })
+  }
+
+  _changeHighlight(e) {
+    this.setState({
+      showLabel: e.target.value === 'label',
+      showPrediction: e.target.value === 'prediction'
     })
   }
 
@@ -224,7 +234,7 @@ class Annotator extends React.Component {
   }
 
   render() {
-    const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications } = this.state;
+    const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications, showLabel, showPrediction } = this.state;
     let url;
     if (item) {
       if (useLocalImages) {
@@ -239,9 +249,12 @@ class Annotator extends React.Component {
     const dashedType = type && type.replace(/\s+/g, '-');
     const noType = reference && (type === '' || type === undefined);
     const hasPrediction = item && item.meta && typeof item.meta.prediction !== 'undefined';
+    const prediction = get(item, 'meta.prediction');
+    const confidence = get(item, 'meta.confidence');
     return <div className="annotator">
       <div className="overlay controls">
         <form>
+          <div>Host</div>
           <div className="radio">
             <label>
               <input type="radio" value="localhost" checked={useLocalImages} onChange={this._changeImageSource}/>
@@ -252,6 +265,22 @@ class Annotator extends React.Component {
             <label>
               <input type="radio" value="api" checked={!useLocalImages} onChange={this._changeImageSource}/>
               API defined
+            </label>
+          </div>
+        </form>
+
+        <form>
+          <div>Highlight</div>
+          <div className="radio">
+            <label>
+              <input type="radio" value="label" checked={showLabel} onChange={this._changeHighlight}/>
+              label
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input type="radio" value="prediction" checked={showPrediction} onChange={this._changeHighlight}/>
+              prediction
             </label>
           </div>
         </form>
@@ -270,7 +299,7 @@ class Annotator extends React.Component {
                 >{type}</span>
             </li>
             {hasPrediction && <li>
-              <span className='label'>Prediction</span><span>{item.meta.prediction} ({Number(item.meta.confidence).toFixed(2)})</span>
+              <span className='label'>Prediction</span><span>{prediction} ({Number(confidence).toFixed(2)})</span>
             </li>
             }
             {/*<li>*/}
@@ -286,8 +315,12 @@ class Annotator extends React.Component {
       </div>
 
       <div className="overlay eye-catcher">
-        { (type === 'aanvraag' || type === 'unknown' || noType) && <div>
+        { showLabel && (type === 'aanvraag' || type === 'unknown' || noType) && <div>
           <div className={classNames('highlight', dashedType, { 'empty': noType })}>{type}</div>
+        </div> }
+        { showPrediction && <div>
+          <div className={classNames('highlight')}>
+            <span>{prediction} ({Number(confidence).toFixed(2)})</span></div>
         </div> }
       </div>
 
