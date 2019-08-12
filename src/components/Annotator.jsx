@@ -238,6 +238,7 @@ class Annotator extends React.Component {
     const type = get(item, 'meta.type');
     const dashedType = type && type.replace(/\s+/g, '-');
     const noType = reference && (type === '' || type === undefined);
+    const hasPrediction = item && item.meta && typeof item.meta.prediction !== 'undefined';
     return <div className="annotator">
       <div className="overlay controls">
         <form>
@@ -268,6 +269,10 @@ class Annotator extends React.Component {
                 className={classNames('highlight', dashedType, { 'empty': noType })}
                 >{type}</span>
             </li>
+            {hasPrediction && <li>
+              <span className='label'>Prediction</span><span>{item.meta.prediction} ({Number(item.meta.confidence).toFixed(2)})</span>
+            </li>
+            }
             {/*<li>*/}
               {/*<label>*/}
                 {/*Document_type:*/}
