@@ -63,7 +63,7 @@ class Annotator extends React.Component {
 
       // Code to skip to desired type (or other meta property)
       // if (item.meta.type !== 'aanvraag') { // Jump to next aanvraag
-      // if (item.meta.type !== 'unknown') {
+      // // if (item.meta.type !== 'unknown') {
       //   console.count('next');
       //   const { currentIndex } = this.state;
       //   this._changeAnnotation(currentIndex + 1)
@@ -318,7 +318,7 @@ class Annotator extends React.Component {
         { showLabel && (type === 'aanvraag' || type === 'unknown' || noType) && <div>
           <div className={classNames('highlight', dashedType, { 'empty': noType })}>{type}</div>
         </div> }
-        { showPrediction && <div>
+        { showPrediction && prediction && <div>
           <div className={classNames('highlight')}>
             <span>{prediction} ({Number(confidence).toFixed(2)})</span></div>
         </div> }

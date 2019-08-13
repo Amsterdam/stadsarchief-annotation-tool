@@ -52,12 +52,12 @@
 
 .overlay.eye-catcher {
     top: 20em;
-    left: 45%;
+    left: 50%;
     min-width: 0;
     background-color: unset;
+    transform: translateX(-50%);
 }
 .overlay.eye-catcher > div {
-    margin-left: -50%;
     background-color: #61dafb;
 }
 
@@ -78,13 +78,11 @@
 
 .highlight.unknown {
     background-color: orange;
-    padding-left: 10em;
     height: 1em;
 }
 
 .highlight.empty {
     background-color: red;
-    padding-left: 10em;
     height: 1em;
 }
 
