@@ -64,6 +64,10 @@ class Annotator extends React.Component {
       // Code to skip to desired type (or other meta property)
       // if (item.meta.type !== 'aanvraag') { // Jump to next aanvraag
       // // if (item.meta.type !== 'unknown') {
+      // if (item.meta.prediction == undefined || item.meta.checked) { // Find unannotated prediction
+      // if (item.meta.prediction != 'aanvraag') { // Find next aanvraag prediction
+      // if (item.meta.prediction != 'aanvraag' || item.meta.checked) { // Find unannotated prediction of aanvraag
+      // if (item.meta.prediction == item.meta.type) { // Jump to next wrong prediction
       //   console.count('next');
       //   const { currentIndex } = this.state;
       //   this._changeAnnotation(currentIndex + 1)
