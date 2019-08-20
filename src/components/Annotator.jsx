@@ -1,9 +1,9 @@
 import React from 'react';
-import Annotation from "./Annotation";
+import Annotation from './Annotation';
 import classNames from 'classnames';
 import get from 'lodash.get';
-import {getAnnotation, getBakedUrl, getExamplesId, getLocalUrl, putAnnotation} from "../api";
-import NotificationArea from "./NotificationArea";
+import {getAnnotation, getBakedUrl, getExamplesList, getLocalUrl, putAnnotation} from '../api/generic_api';
+import NotificationArea from './NotificationArea';
 import './Annotator.css';
 
 const availableTypes = [
@@ -50,12 +50,12 @@ class Annotator extends React.Component {
     })
   }
 
-  _loadAnnotation(id) {
+  _loadAnnotation(url) {
     this.setState({
       item: undefined,
       isLoading: true
     });
-    return getAnnotation(id).then(item => {
+    return getAnnotation(url).then(item => {
       this.setState({
         item,
         isLoading: false
@@ -76,19 +76,19 @@ class Annotator extends React.Component {
   }
 
   _changeAnnotation(index) {
-    const { count, ids } = this.state;
+    const { count, examples } = this.state;
 
     if (index < 0 || index >= count) {
       console.warn(`index outside of range: ${index}`);
     } else {
-      const id = ids[index];
+      const example = examples[index];
 
       this.setState({
         currentIndex: index,
-        currentId: id
+        currentId: example.id
       });
 
-      this._loadAnnotation(id);
+      this._loadAnnotation(example._links.self.href);
     }
   }
 
@@ -222,10 +222,10 @@ class Annotator extends React.Component {
   }
 
   componentDidMount() {
-    getExamplesId().then(ids => {
+    getExamplesList().then(examples => {
       this.setState({
-        count: ids.length,
-        ids
+        count: examples.length,
+        examples
       });
 
       this._changeAnnotation(0);
@@ -242,9 +242,9 @@ class Annotator extends React.Component {
     let url;
     if (item) {
       if (useLocalImages) {
-        url = getLocalUrl(item.meta);
+        url = getLocalUrl(item.tags);
       } else {
-        url = getBakedUrl(item);
+        url = getBakedUrl(item.tags);
       }
     }
 

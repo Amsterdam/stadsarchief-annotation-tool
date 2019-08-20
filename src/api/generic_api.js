@@ -1,21 +1,28 @@
-import {API_ROOT} from "./variables";
+import {API_ROOT} from '../variables';
 
 export const getBakedUrl = ({ url }) => url;
 
-export const getLocalUrl = ({reference: filename}) => {
+const arrayToObject = (array) =>
+  array.reduce((obj, item) => {
+    obj[item.key] = item.value;
+    return obj
+  }, {});
+
+export const getLocalUrl = (tags) => {
+  const tagsObj = arrayToObject(tags);
+  const filename = tagsObj.file_name;
   const url = `http://localhost:5000/${filename}`;
   return url;
 };
 
-export const getExamplesId = () => {
-  const url = API_ROOT;
+export const getExamplesList = () => {
+  const url = `${API_ROOT}data/example/?ordering=-id`;
   return fetch(url)
     .then(data => data.json())
-    .then(data => data.ids);
+    .then(data => data);
 };
 
-export const getAnnotation = (index) => {
-  const url = `${API_ROOT}${index}`;
+export const getAnnotation = (url) => {
   return fetch(url)
     .then(data => data.json());
 };
