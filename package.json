@@ -7,6 +7,7 @@
     "@material-ui/core": "^4.3.2",
     "@material-ui/icons": "^4.2.1",
     "classnames": "^2.2.6",
+    "combine-selectors-redux": "^0.0.2",
     "font-awesome": "4.7.0",
     "lodash": "4.17.15",
     "lodash.get": "^4.4.2",
@@ -17,6 +18,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "redux": "^4.0.4",
+    "redux-act-async": "^1.7.0",
     "redux-starter-kit": "^0.6.3"
   },
   "scripts": {

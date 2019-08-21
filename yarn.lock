@@ -1837,7 +1837,7 @@ babel-preset-react-app@^9.0.0:
     babel-plugin-macros "2.5.1"
     babel-plugin-transform-react-remove-prop-types "0.4.24"
 
-babel-runtime@^6.26.0:
+babel-runtime@^6.18.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -2357,6 +2357,10 @@ color@^3.0.0:
   dependencies:
     color-convert "^1.9.1"
     color-string "^1.5.2"
+
+combine-selectors-redux@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/combine-selectors-redux/-/combine-selectors-redux-0.0.2.tgz#3a8717d29e5d5c4615b6f505eb20e873de889e19"
 
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.8"
@@ -7358,6 +7362,18 @@ recursive-readdir@2.2.2:
   resolved "https://registry.yarnpkg.com/recursive-readdir/-/recursive-readdir-2.2.2.tgz#9946fb3274e1628de6e36b2f6714953b4845094f"
   dependencies:
     minimatch "3.0.4"
+
+redux-act-async@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/redux-act-async/-/redux-act-async-1.7.0.tgz#4fed2df56117d9d4ef4b9fb003daad9607464f9d"
+  dependencies:
+    babel-runtime "^6.18.0"
+    object-assign "^4.1.1"
+    redux-act "^1.1.0"
+
+redux-act@^1.1.0:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/redux-act/-/redux-act-1.7.7.tgz#0ee8140ade95921b6ebbf70be3fc61c8d6c8a4b1"
 
 redux-devtools-extension@^2.13.8:
   version "2.13.8"

@@ -2,7 +2,15 @@
 Annotation tool to quickly label images to a specific type.
 Focused on the Stadsarchief bouwdossier use case of distinguishing "bouwaanvragen" from other types.
 
-# Create React App
+
+## Design choices
+
+* Material design used for prototype, clearly AMS style is preferred in the future
+* Currently not taking into account simultaneous edits, e.g.: Some one labels example you are looking at.
+* Filter logic is generic, actual labeling is focussed on image classification a.t.m. 
+
+
+# Default create React app readme 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

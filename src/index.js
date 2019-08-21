@@ -7,8 +7,11 @@ import * as serviceWorker from './serviceWorker';
 
 import createStore from './store';
 import {Provider} from "react-redux";
+import {fetchExamples} from "./store/examples";
 
 const store = createStore();
+
+store.dispatch(fetchExamples());
 
 const rootElement = document.getElementById('root')
 ReactDOM.render(
@@ -16,7 +19,7 @@ ReactDOM.render(
     <App />
   </Provider>,
   rootElement
-)
+);
 
 
 // If you want your app to work offline and load faster, you can change

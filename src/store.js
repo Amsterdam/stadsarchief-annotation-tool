@@ -1,10 +1,16 @@
-import dynamicConfig from './store/dynamicConfig';
+import configReducer from './store/dynamicConfig';
+import examplesReducer, * as examplesSelectors from './store/examples';
 import {configureStore} from "redux-starter-kit";
 import {combineReducers} from "redux";
-
+import {combineSelectors} from "combine-selectors-redux";
 
 const rootReducer = combineReducers({
-  config: dynamicConfig,
+  config: configReducer,
+  examples: examplesReducer
+});
+
+export const selectors = combineSelectors({
+  examples: examplesSelectors
 });
 
 export default () => {

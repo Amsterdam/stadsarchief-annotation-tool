@@ -2,16 +2,10 @@ import {API_ROOT} from '../variables';
 
 export const getBakedUrl = ({ url }) => url;
 
-const arrayToObject = (array) =>
-  array.reduce((obj, item) => {
-    obj[item.key] = item.value;
-    return obj
-  }, {});
 
-export const getLocalUrl = (tags) => {
-  const tagsObj = arrayToObject(tags);
-  const filename = tagsObj.file_name;
+export const getLocalUrl = (filename) => {
   const url = `http://localhost:5000/${filename}`;
+  console.log(url);
   return url;
 };
 

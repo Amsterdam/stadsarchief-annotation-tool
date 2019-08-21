@@ -8,6 +8,7 @@ import './Annotator.css';
 import AnnotationList from "./AnnotationList";
 import Filters from "./Filters";
 import FoldPanel from "./FoldPanel";
+import arrayToObject from "../util/arrayToObject";
 
 const availableTypes = [
   '',
@@ -250,7 +251,8 @@ class Annotator extends React.Component {
     let url;
     if (item) {
       if (useLocalImages) {
-        url = getLocalUrl(item.tags);
+        const tagsObj = arrayToObject(item.tags);
+        url = getLocalUrl(tagsObj.file_name);
       } else {
         url = getBakedUrl(item.tags);
       }

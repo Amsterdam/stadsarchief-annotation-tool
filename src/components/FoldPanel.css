@@ -8,6 +8,10 @@
     cursor: pointer;
 }
 
+.fold-panel .toggle-icon {
+    color: rgba(255, 255, 255, 0.54);
+}
+
 .fold-panel .header-content {
     display: inline-block;
 }
