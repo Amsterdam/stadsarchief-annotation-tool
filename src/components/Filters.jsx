@@ -1,56 +1,90 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import './Filters.css';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import connect from "react-redux/es/connect/connect";
+import {selectors} from "../store";
+import {clearFilter, setFilter} from "../store/filters";
 
-class Filter extends React.Component {
-  // example option for single filter:
-  // * specific value: apple/pear
-  // * limit filter to undefined elements: <empty>
-  // * Don't apply filter: ""
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
-  render() {
-    const {label, values} = this.props;
-    return (
-      <div>
-        <label>
-          {label}
-          <select>
-          {/*<select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>*/}
-            { values.map((value) => <option key={value || '__empty'} value={value}>{value}</option>) }
-          </select>
-        </label>
-      </div>
-      );
-  }
-}
+const Filter = ({ classes, handleChange, label, values, activeValue, clearFilter, setFilter }) => {
+  const id = `${label}-helper`;
 
-class Filters extends React.Component {
-  componentDidMount() {
-    const { availableFilters } = this.props;
-    this.setState({
-      active: {
+  const onChange = (e) => {
+    const itemValue = e.target.value;
+    if (itemValue.length > 0) {
+      setFilter({label, value: itemValue})
+    } else {
+      clearFilter({label});
+    }
+  };
 
+  const selectValue = activeValue || '';
+
+  return (
+    <FormControl className={classes.formControl}>
+      <InputLabel htmlFor={id}>{label}</InputLabel>
+      <Select
+        value={selectValue}
+        onChange={onChange}
+        input={<Input name={label} id={id} />}
+      >
+        <MenuItem value=""><em>None</em></MenuItem>
+        <MenuItem value="Null"><em>Null</em></MenuItem>
+        { values.map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>) }
+      </Select>
+      <FormHelperText>Some important helper text</FormHelperText>
+    </FormControl>
+  )
+};
+
+const Filters = ({ activeFilters, availableFilters, clearFilter, setFilter }) => {
+  const classes = useStyles();
+
+  const list = Object.entries(availableFilters);
+  return (
+    <form className={classes.root} autoComplete="off">
+      { list.map(([label, values]) =>
+        <Filter
+          key={label}
+          label={label}
+          values={values}
+          activeValue={activeFilters[label]}
+          clearFilter={clearFilter}
+          setFilter={setFilter}
+          classes={classes}
+        />)
       }
-    })
-  }
-
-  render() {
-    const { availableFilters } = this.props;
-    const list = Object.entries(availableFilters);
-    return <div className="filters">
-      <form>
-        { list.map(([label, values]) => <Filter key={label} label={label} values={values} />) }
-      </form>
-    </div>
-  }
-}
-
-Filters.defaultProps = {
-  // url: 'https://www.amsterdam.nl/publish/pages/858225/logo.png'
+    </form>
+  );
 };
 
-Filters.propTypes = {
-  availableFilters: PropTypes.object.isRequired
+const mapState = (state) => {
+  return {
+    activeFilters: selectors.filters.getActiveFilters(state),
+    availableFilters: selectors.filters.getAvailableFilters(state),
+  }
 };
+const mapDispatch = { clearFilter, setFilter };
 
-export default Filters;
+export default connect(
+  mapState,
+  mapDispatch
+)(Filters);
