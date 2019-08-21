@@ -5,13 +5,15 @@ import classNames from 'classnames';
 import get from 'lodash.get';
 import {getAnnotation, getBakedUrl, getLocalUrl, putAnnotation} from '../api/generic_api';
 import NotificationArea from './NotificationArea';
-import AnnotationList from "./AnnotationList";
 import Filters from "./Filters";
 import FoldPanel from "./FoldPanel";
 import arrayToObject from "../util/arrayToObject";
 import {selectors} from "../store";
 import './Annotator.css';
 import './panel.css';
+import ExampleInfo from "./ExampleInfo";
+import Paper from "@material-ui/core/Paper/Paper";
+import ShortcutsList from "./ShortcutsList";
 
 
 const availableTypes = [
@@ -254,7 +256,6 @@ class Annotator extends React.Component {
     const type = get(item, 'meta.type');
     const dashedType = type && type.replace(/\s+/g, '-');
     const noType = reference && (type === '' || type === undefined);
-    const hasPrediction = item && item.meta && typeof item.meta.prediction !== 'undefined';
     const prediction = get(item, 'meta.prediction');
     const confidence = get(item, 'meta.confidence');
 
@@ -293,24 +294,18 @@ class Annotator extends React.Component {
         {/*</form>*/}
       {/*</div>*/}
 
-      <div className="panel top-right">
-        <form onSubmit={this._onInfoSubmit.bind(this)}>
-          <ul>
-            <li><span className='label'>Current</span>{currentId}</li>
-            <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
-            <li><span className='label'>Name</span><span>{reference}</span></li>
-            <li><span className='label'>Checked</span><span>{String(get(item, 'meta.checked'))}</span></li>
-            <li>
-              <span className='label'>Document_type</span><span
-                className={classNames('highlight', dashedType, { 'empty': noType })}
-                >{type}</span>
-            </li>
-            {hasPrediction && <li>
-              <span className='label'>Prediction</span><span>{prediction} ({Number(confidence).toFixed(2)})</span>
-            </li>
-            }
-          </ul>
-        </form>
+      <div className="top-right">
+        <Paper>
+          {item && <ExampleInfo example={item} /> }
+        </Paper>
+        <Paper>
+          <form onSubmit={this._onInfoSubmit.bind(this)}>
+            <ul>
+              <li><span className='label'>Current</span>{currentId}</li>
+              <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
+            </ul>
+          </form>
+        </Paper>
       </div>
 
       <div className="eye-catcher panel">
@@ -329,20 +324,13 @@ class Annotator extends React.Component {
             Keyboard shortcuts
           </FoldPanel.Header>
           <FoldPanel.Body>
-            <ul>
-              <li><span className='label'>Commit</span>space bar</li>
-              <li><span className='label'>Prev/next</span>left/right arrow</li>
-              <li><span className='label'>Clear type</span>escape</li>
-              <li><span className='label'>Aanvraag</span>a</li>
-              <li><span className='label'>Besluit</span>b</li>
-              <li><span className='label'>Other</span>z / o</li>
-            </ul>
+            <ShortcutsList/>
           </FoldPanel.Body>
         </FoldPanel>
       </div>
 
-      <div className="panel bottom-left">
-        { item && <AnnotationList annotations={item.annotations} /> }
+      <div className="bottom-left">
+        {/*{ item && <AnnotationList annotations={item.annotations} /> }*/}
       </div>
 
       <div className="top-left">

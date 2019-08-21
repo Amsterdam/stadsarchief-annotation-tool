@@ -5,6 +5,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import './FoldPanel.css';
 import IconButton from "@material-ui/core/IconButton/IconButton";
+import Paper from "@material-ui/core/Paper/Paper";
+import Divider from "@material-ui/core/Divider/Divider";
 
 function Header() {
   return null
@@ -41,7 +43,7 @@ class FoldPanel extends React.Component {
     const body = children.find(child => child.type === Body);
     const panelName = header.props.children;
     return <div className="fold-panel">
-      <div className="panel">
+      <Paper>
         <header onClick={this._toggle} title={isOpen ? `close ${panelName}` : `open ${panelName}`}>
           <IconButton className="toggle-icon">
             { isOpen ? <ExpandLessIcon /> : <ChevronRightIcon /> }
@@ -53,6 +55,7 @@ class FoldPanel extends React.Component {
           </div>
           }
         </header>
+        { isOpen && <Divider /> }
         <main>
           {isOpen &&
             <div className="header-body">
@@ -60,7 +63,7 @@ class FoldPanel extends React.Component {
             </div>
           }
         </main>
-      </div>
+      </Paper>
     </div>
   }
 }

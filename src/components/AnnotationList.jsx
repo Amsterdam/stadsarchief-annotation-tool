@@ -1,16 +1,15 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import './AnnotationList.css';
+import Paper from "@material-ui/core/Paper/Paper";
 
 const AnnotationList = ({annotations}) => {
-  console.log(annotations);
-  return <div className="annotation-list">
+  return <Paper className="annotation-list">
     Annotation list
-  </div>
+  </Paper>
 };
 
 AnnotationList.defaultProps = {
-  // url: 'https://www.amsterdam.nl/publish/pages/858225/logo.png'
 };
 
 AnnotationList.propTypes = {
