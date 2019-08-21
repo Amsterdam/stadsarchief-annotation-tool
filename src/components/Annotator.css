@@ -13,6 +13,18 @@
     left: 5em;
 }
 
+.top-center {
+    position: absolute;
+    bottom: 5em;
+    left: 50%;
+}
+
+.bottom-left {
+    position: absolute;
+    bottom: 5em;
+    left: 5em;
+}
+
 .overlay {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.2);

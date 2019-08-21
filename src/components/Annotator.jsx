@@ -5,6 +5,8 @@ import get from 'lodash.get';
 import {getAnnotation, getBakedUrl, getExamplesList, getLocalUrl, putAnnotation} from '../api/generic_api';
 import NotificationArea from './NotificationArea';
 import './Annotator.css';
+import AnnotationList from "./AnnotationList";
+import Filters from "./Filters";
 
 const availableTypes = [
   '',
@@ -238,6 +240,11 @@ class Annotator extends React.Component {
   }
 
   render() {
+    const availableFilters = {
+      type: ['aanvraag', 'besluit', undefined],
+      stadsdeel: ['SA', 'SU', 'ST', undefined]
+    };
+
     const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications, showLabel, showPrediction } = this.state;
     let url;
     if (item) {
@@ -255,40 +262,41 @@ class Annotator extends React.Component {
     const hasPrediction = item && item.meta && typeof item.meta.prediction !== 'undefined';
     const prediction = get(item, 'meta.prediction');
     const confidence = get(item, 'meta.confidence');
-    return <div className="annotator">
-      <div className="overlay controls">
-        <form>
-          <div>Host</div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="localhost" checked={useLocalImages} onChange={this._changeImageSource}/>
-              localhost:5000
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="api" checked={!useLocalImages} onChange={this._changeImageSource}/>
-              API defined
-            </label>
-          </div>
-        </form>
 
-        <form>
-          <div>Highlight</div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="label" checked={showLabel} onChange={this._changeHighlight}/>
-              label
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="prediction" checked={showPrediction} onChange={this._changeHighlight}/>
-              prediction
-            </label>
-          </div>
-        </form>
-      </div>
+    return <div className="annotator">
+      {/*<div className="overlay controls">*/}
+        {/*<form>*/}
+          {/*<div>Host</div>*/}
+          {/*<div className="radio">*/}
+            {/*<label>*/}
+              {/*<input type="radio" value="localhost" checked={useLocalImages} onChange={this._changeImageSource}/>*/}
+              {/*localhost:5000*/}
+            {/*</label>*/}
+          {/*</div>*/}
+          {/*<div className="radio">*/}
+            {/*<label>*/}
+              {/*<input type="radio" value="api" checked={!useLocalImages} onChange={this._changeImageSource}/>*/}
+              {/*API defined*/}
+            {/*</label>*/}
+          {/*</div>*/}
+        {/*</form>*/}
+
+        {/*<form>*/}
+          {/*<div>Highlight</div>*/}
+          {/*<div className="radio">*/}
+            {/*<label>*/}
+              {/*<input type="radio" value="label" checked={showLabel} onChange={this._changeHighlight}/>*/}
+              {/*label*/}
+            {/*</label>*/}
+          {/*</div>*/}
+          {/*<div className="radio">*/}
+            {/*<label>*/}
+              {/*<input type="radio" value="prediction" checked={showPrediction} onChange={this._changeHighlight}/>*/}
+              {/*prediction*/}
+            {/*</label>*/}
+          {/*</div>*/}
+        {/*</form>*/}
+      {/*</div>*/}
 
       <div className="overlay info">
         <form onSubmit={this._onInfoSubmit.bind(this)}>
@@ -339,7 +347,15 @@ class Annotator extends React.Component {
         </ul>
       </div>
 
-      <div className="top-left">
+      <div className="bottom-left overlay">
+        { item && <AnnotationList annotations={item.annotations} /> }
+      </div>
+
+      <div className="top-left overlay">
+        <Filters availableFilters={availableFilters}/>
+      </div>
+
+      <div className="top-center">
         <NotificationArea notifications={notifications} />
       </div>
 
@@ -347,7 +363,7 @@ class Annotator extends React.Component {
       <div tabIndex="0" ref={elem => this.annotationContainer = elem}>
         {!isLoading && url && <Annotation url={url}/>}
       </div>
-    </div>;
+    </div>
   }
 }
 
