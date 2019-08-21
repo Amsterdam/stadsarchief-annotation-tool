@@ -39,7 +39,6 @@ class Filters extends React.Component {
     const list = Object.entries(availableFilters);
     return <div className="filters">
       <form>
-        <h3>Filters</h3>
         { list.map(([label, values]) => <Filter key={label} label={label} values={values} />) }
       </form>
     </div>

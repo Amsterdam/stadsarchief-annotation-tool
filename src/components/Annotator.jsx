@@ -7,6 +7,7 @@ import NotificationArea from './NotificationArea';
 import './Annotator.css';
 import AnnotationList from "./AnnotationList";
 import Filters from "./Filters";
+import FoldPanel from "./FoldPanel";
 
 const availableTypes = [
   '',
@@ -336,23 +337,37 @@ class Annotator extends React.Component {
         </div> }
       </div>
 
-      <div className="overlay shortcuts">
-        <ul>
-          <li><span className='label'>Commit</span>space bar</li>
-          <li><span className='label'>Prev/next</span>left/right arrow</li>
-          <li><span className='label'>Clear type</span>escape</li>
-          <li><span className='label'>Aanvraag</span>a</li>
-          <li><span className='label'>Besluit</span>b</li>
-          <li><span className='label'>Other</span>z / o</li>
-        </ul>
+      <div className="bottom-right">
+        <FoldPanel>
+          <FoldPanel.Header>
+            Keyboard shortcuts
+          </FoldPanel.Header>
+          <FoldPanel.Body>
+            <ul>
+              <li><span className='label'>Commit</span>space bar</li>
+              <li><span className='label'>Prev/next</span>left/right arrow</li>
+              <li><span className='label'>Clear type</span>escape</li>
+              <li><span className='label'>Aanvraag</span>a</li>
+              <li><span className='label'>Besluit</span>b</li>
+              <li><span className='label'>Other</span>z / o</li>
+            </ul>
+          </FoldPanel.Body>
+        </FoldPanel>
       </div>
 
       <div className="bottom-left overlay">
         { item && <AnnotationList annotations={item.annotations} /> }
       </div>
 
-      <div className="top-left overlay">
-        <Filters availableFilters={availableFilters}/>
+      <div className="top-left">
+        <FoldPanel>
+          <FoldPanel.Header>
+            Filters
+          </FoldPanel.Header>
+          <FoldPanel.Body>
+            <Filters availableFilters={availableFilters}/>
+          </FoldPanel.Body>
+        </FoldPanel>
       </div>
 
       <div className="top-center">

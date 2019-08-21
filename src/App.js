@@ -2,11 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import './App.css';
 import Annotator from './components/Annotator';
-
-
-function Index() {
-  return <h2>Home</h2>;
-}
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -23,7 +19,7 @@ function App() {
           </ul>
         </nav>
 
-        <Route path="/" exact component={Index} />
+        <Route path="/" exact component={Home} />
         <Route path="/annotator/" component={Annotator} />
       </div>
     </Router>
