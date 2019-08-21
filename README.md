@@ -7,7 +7,8 @@ Focused on the Stadsarchief bouwdossier use case of distinguishing "bouwaanvrage
 
 * Material design used for prototype, clearly AMS style is preferred in the future
 * Currently not taking into account simultaneous edits, e.g.: Some one labels example you are looking at.
-* Filter logic is generic, actual labeling is focussed on image classification a.t.m. 
+* Filter logic is generic, actual labeling is focussed on image classification a.t.m.
+* Listener functionality achieved with Redux Saga. Other async functionality using Redux Thunk. 
 
 
 # Default create React app readme 

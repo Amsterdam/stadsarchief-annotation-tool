@@ -2,8 +2,6 @@ import Button from "@material-ui/core/Button/Button";
 import React from "react";
 import { connect } from 'react-redux'
 import {fetchExamples} from "../store/examples";
-import FoldPanel from "../components/FoldPanel";
-import Filters from "../components/Filters";
 
 const mapState = (state) => {
   return {
@@ -15,14 +13,6 @@ const mapDispatch = { fetchExamples };
 const HomePage = ({ fetchExamples }) => {
   return (
     <div>
-      <FoldPanel>
-        <FoldPanel.Header>
-          Filters
-        </FoldPanel.Header>
-        <FoldPanel.Body>
-          <Filters />
-        </FoldPanel.Body>
-      </FoldPanel>
       <Button variant="contained" color="primary" onClick={(e) => { e.preventDefault(); fetchExamples({ value: 'empty' }) } }>
         Hello World
       </Button>

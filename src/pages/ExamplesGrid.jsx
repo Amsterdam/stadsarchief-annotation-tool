@@ -9,6 +9,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {connect} from "react-redux";
 import {selectors} from "../store";
 import {getLocalUrl} from "../api/generic_api";
+import Filters from "../components/Filters";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,11 +51,12 @@ const ExamplesGrid = ({ examples }) => {
 
   return (
     <div className={classes.root}>
+      <Filters />
       {
         examples && examples.length &&
         <GridList cellHeight={180} cols={nCols} className={classes.gridList}>
           <GridListTile key="Subheader" cols={nCols} style={{ height: 'auto' }}>
-            <ListSubheader component="div">MyHeader</ListSubheader>
+            <ListSubheader component="div">{examples.length} examples</ListSubheader>
           </GridListTile>
           {examples.map(example => SingleTile(example, classes))}
         </GridList>

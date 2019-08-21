@@ -7,6 +7,7 @@ const filtersSlice = createSlice({
     availableFilters: {
       type: ['aanvraag', 'besluit'],
       stadsdeel: ['SA', 'SU', 'ST'],
+      dossier_nummer: ['13325', '9061'],
     }
   },
   reducers: {
@@ -19,6 +20,9 @@ const filtersSlice = createSlice({
       const { label } = action.payload;
       const { activeFilters } = state;
       delete activeFilters[label];
+    },
+    clearAllFilters(state, action) {
+      state.activeFilters = {}
     }
   }
 });
@@ -28,6 +32,6 @@ export const getAvailableFilters = state => state.availableFilters;
 export const getActiveFilters = state => state.activeFilters;
 
 // actions
-export const { clearFilter, setFilter } = filtersSlice.actions;
+export const { clearAllFilters, clearFilter, setFilter } = filtersSlice.actions;
 
 export default filtersSlice.reducer

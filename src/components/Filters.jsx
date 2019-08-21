@@ -7,8 +7,11 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import connect from "react-redux/es/connect/connect";
+import ClearIcon from '@material-ui/icons/Clear';
+import Fab from "@material-ui/core/Fab/Fab";
+
 import {selectors} from "../store";
-import {clearFilter, setFilter} from "../store/filters";
+import {clearAllFilters, clearFilter, setFilter} from "../store/filters";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +58,7 @@ const Filter = ({ classes, handleChange, label, values, activeValue, clearFilter
   )
 };
 
-const Filters = ({ activeFilters, availableFilters, clearFilter, setFilter }) => {
+const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter, setFilter }) => {
   const classes = useStyles();
 
   const list = Object.entries(availableFilters);
@@ -72,6 +75,9 @@ const Filters = ({ activeFilters, availableFilters, clearFilter, setFilter }) =>
           classes={classes}
         />)
       }
+      <Fab size="small" aria-label="clear filters" onClick={e => clearAllFilters()}>
+        <ClearIcon />
+      </Fab>
     </form>
   );
 };
@@ -82,7 +88,7 @@ const mapState = (state) => {
     availableFilters: selectors.filters.getAvailableFilters(state),
   }
 };
-const mapDispatch = { clearFilter, setFilter };
+const mapDispatch = { clearAllFilters, clearFilter, setFilter };
 
 export default connect(
   mapState,

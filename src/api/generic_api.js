@@ -5,15 +5,21 @@ export const getBakedUrl = ({ url }) => url;
 
 export const getLocalUrl = (filename) => {
   const url = `http://localhost:5000/${filename}`;
-  console.log(url);
   return url;
 };
 
-export const getExamplesList = () => {
-  const url = `${API_ROOT}data/example/?ordering=-id`;
+export const getExamplesList = (filters) => {
+  const params = new URLSearchParams();
+  params.set('page_size', 20);
+  params.set('ordering', '-id');
+  for (const [key, value] of Object.entries(filters)) {
+    params.set('tags__key', key);
+    params.set('tags__value', value);
+  }
+  const url = `${API_ROOT}data/example/?${params.toString()}`;
   return fetch(url)
     .then(data => data.json())
-    .then(data => data);
+    .then(data => data.results);
 };
 
 export const getAnnotation = (url) => {
