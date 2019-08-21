@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {selectors} from "../store";
 import {getLocalUrl} from "../api/generic_api";
 import Filters from "../components/Filters";
+import AnnotationImage from "../components/AnnotationImage";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,7 +31,7 @@ const SingleTile = (example, classes) => {
   const url = getLocalUrl(example.reference);
   return (
     <GridListTile key={url}>
-      <img src={url} alt={example.title} />
+      <AnnotationImage url={url} />
       <GridListTileBar
         title={example.reference}
         subtitle={<span>My meta data</span>}
