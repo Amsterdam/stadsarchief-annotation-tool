@@ -41,24 +41,26 @@ class FoldPanel extends React.Component {
     const body = children.find(child => child.type === Body);
     const panelName = header.props.children;
     return <div className="fold-panel">
-      <header onClick={this._toggle} title={isOpen ? `close ${panelName}` : `open ${panelName}`}>
-        <IconButton className="toggle-icon">
-          { isOpen ? <ExpandLessIcon /> : <ChevronRightIcon /> }
-        </IconButton>
+      <div className="panel">
+        <header onClick={this._toggle} title={isOpen ? `close ${panelName}` : `open ${panelName}`}>
+          <IconButton className="toggle-icon">
+            { isOpen ? <ExpandLessIcon /> : <ChevronRightIcon /> }
+          </IconButton>
 
-        { isOpen &&
-        <div className="header-content">
-          {header ? header.props.children : null}
-        </div>
-        }
-      </header>
-      <main>
-        {isOpen &&
-          <div className="header-body">
-            {body ? body.props.children : null}
+          { isOpen &&
+          <div className="header-content">
+            {header ? header.props.children : null}
           </div>
-        }
-      </main>
+          }
+        </header>
+        <main>
+          {isOpen &&
+            <div className="header-body">
+              {body ? body.props.children : null}
+            </div>
+          }
+        </main>
+      </div>
     </div>
   }
 }

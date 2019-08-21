@@ -5,12 +5,14 @@ import classNames from 'classnames';
 import get from 'lodash.get';
 import {getAnnotation, getBakedUrl, getLocalUrl, putAnnotation} from '../api/generic_api';
 import NotificationArea from './NotificationArea';
-import './Annotator.css';
 import AnnotationList from "./AnnotationList";
 import Filters from "./Filters";
 import FoldPanel from "./FoldPanel";
 import arrayToObject from "../util/arrayToObject";
 import {selectors} from "../store";
+import './Annotator.css';
+import './panel.css';
+
 
 const availableTypes = [
   '',
@@ -66,18 +68,6 @@ class Annotator extends React.Component {
         item,
         isLoading: false
       });
-
-      // Code to skip to desired type (or other meta property)
-      // if (item.meta.type !== 'aanvraag') { // Jump to next aanvraag
-      // // if (item.meta.type !== 'unknown') {
-      // if (item.meta.prediction == undefined || item.meta.checked) { // Find unannotated prediction
-      // if (item.meta.prediction != 'aanvraag') { // Find next aanvraag prediction
-      // if (item.meta.prediction != 'aanvraag' || item.meta.checked) { // Find unannotated prediction of aanvraag
-      // if (item.meta.prediction == item.meta.type) { // Jump to next wrong prediction
-      //   console.count('next');
-      //   const { currentIndex } = this.state;
-      //   this._changeAnnotation(currentIndex + 1)
-      // }
     });
   }
 
@@ -128,10 +118,6 @@ class Annotator extends React.Component {
     this._addNotification(currentId, `${currentId} -> ${meta.type}`);
   }
 
-  // _onSelectChange(event) {
-  //   this._updateType(event.target.value)
-  // }
-
   _onInfoSubmit(event) {
     event.preventDefault();
     let inputElement = event.target.querySelector('input[name="idx"]');
@@ -140,7 +126,7 @@ class Annotator extends React.Component {
 
     const index = parseInt(value, 10);
 
-    if (index >= 0 && index < this.state.count) {
+    if (index >= 0 && index < this.props.count) {
       this._changeAnnotation(index)
     }
   }
@@ -228,6 +214,10 @@ class Annotator extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.examples) {
+      // Examples data already available
+      this._changeAnnotation(0);
+    }
 
     const element = this.annotationContainer;
     element.focus();
@@ -236,7 +226,7 @@ class Annotator extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevProps.examples && this.props.examples) {
+    if (!prevProps.examples && this.props.examples) { // Waiting for examples data to be available
       this._changeAnnotation(0);
     }
   }
@@ -247,7 +237,7 @@ class Annotator extends React.Component {
       stadsdeel: ['SA', 'SU', 'ST', undefined]
     };
 
-    const { count } = this.state;
+    const { count } = this.props;
 
     const { currentId, currentIndex, isLoading, item, useLocalImages, notifications, showLabel, showPrediction } = this.state;
     let url;
@@ -303,7 +293,7 @@ class Annotator extends React.Component {
         {/*</form>*/}
       {/*</div>*/}
 
-      <div className="overlay info">
+      <div className="panel top-right">
         <form onSubmit={this._onInfoSubmit.bind(this)}>
           <ul>
             <li><span className='label'>Current</span>{currentId}</li>
@@ -319,19 +309,11 @@ class Annotator extends React.Component {
               <span className='label'>Prediction</span><span>{prediction} ({Number(confidence).toFixed(2)})</span>
             </li>
             }
-            {/*<li>*/}
-              {/*<label>*/}
-                {/*Document_type:*/}
-                {/*<select value={item && item.document_type || ''} onChange={this._onSelectChange.bind(this)}>*/}
-                  {/*{ availableTypes.map((type) => <option key={type} value={type}>{type}</option>) }*/}
-                {/*</select>*/}
-              {/*</label>*/}
-            {/*</li>*/}
           </ul>
         </form>
       </div>
 
-      <div className="overlay eye-catcher">
+      <div className="eye-catcher panel">
         { showLabel && (type === 'aanvraag' || type === 'unknown' || noType) && <div>
           <div className={classNames('highlight', dashedType, { 'empty': noType })}>{type}</div>
         </div> }
@@ -359,7 +341,7 @@ class Annotator extends React.Component {
         </FoldPanel>
       </div>
 
-      <div className="bottom-left overlay">
+      <div className="panel bottom-left">
         { item && <AnnotationList annotations={item.annotations} /> }
       </div>
 

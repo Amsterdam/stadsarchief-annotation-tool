@@ -1,26 +1,27 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import connect from "react-redux/es/connect/connect";
 import ClearIcon from '@material-ui/icons/Clear';
-import Fab from "@material-ui/core/Fab/Fab";
 
 import {selectors} from "../store";
 import {clearAllFilters, clearFilter, setFilter} from "../store/filters";
+import Button from "@material-ui/core/Button/Button";
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root: props => ({
     display: 'flex',
     flexWrap: 'wrap',
-  },
+    flexDirection: props.direction,
+  }),
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 140,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -49,17 +50,17 @@ const Filter = ({ classes, handleChange, label, values, activeValue, clearFilter
         onChange={onChange}
         input={<Input name={label} id={id} />}
       >
-        <MenuItem value=""><em>None</em></MenuItem>
-        <MenuItem value="Null"><em>Null</em></MenuItem>
+        <MenuItem value=""><em>All</em></MenuItem>
         { values.map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>) }
+        <MenuItem value="Null"><em>Null</em></MenuItem>
       </Select>
-      <FormHelperText>Some important helper text</FormHelperText>
+      {/*<FormHelperText>Some important helper text</FormHelperText>*/}
     </FormControl>
   )
 };
 
-const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter, setFilter }) => {
-  const classes = useStyles();
+const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter, setFilter, direction }) => {
+  const classes = useStyles({direction});
 
   const list = Object.entries(availableFilters);
   return (
@@ -75,11 +76,18 @@ const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter
           classes={classes}
         />)
       }
-      <Fab size="small" aria-label="clear filters" onClick={e => clearAllFilters()}>
-        <ClearIcon />
-      </Fab>
+      <Button variant="outlined" className={classes.button} onClick={e => clearAllFilters()}>
+        Clear <ClearIcon />
+      </Button>
     </form>
   );
+};
+
+Filters.defaultProps = {
+  direction: 'column'
+};
+Filters.propTypes = {
+  direction: PropTypes.string
 };
 
 const mapState = (state) => {

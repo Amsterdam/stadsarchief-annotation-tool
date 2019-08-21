@@ -1,7 +1,4 @@
 .fold-panel {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: white;
-    padding: 0.2rem;
 }
 
 .fold-panel header {
@@ -9,7 +6,7 @@
 }
 
 .fold-panel .toggle-icon {
-    color: rgba(255, 255, 255, 0.54);
+    color: rgba(0, 0, 0, 0.54);
 }
 
 .fold-panel .header-content {

@@ -19,6 +19,12 @@
     left: 50%;
 }
 
+.top-right {
+    position: absolute;
+    top: 5em;
+    right: 5em;
+}
+
 .bottom-left {
     position: absolute;
     bottom: 5em;
@@ -31,46 +37,14 @@
     right: 5em;
 }
 
-.overlay {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.2);
-    color: white;
-    min-width: 25em;
-    padding: 1.5rem;
-}
-
-.overlay.controls {
-    bottom: 5em;
-    left: 5em;
-}
-
-.overlay.info {
-    top: 5em;
-    right: 5em;
-}
-
-.overlay > ul {
-    margin: 0;
-}
-
-.overlay .label {
-    font-weight: bold;
-    margin-right: 2em;
-}
-
-.overlay.info input {
-    width: 5em;
-    text-align: right;
-}
-
-.overlay.eye-catcher {
+.eye-catcher {
     top: 20em;
     left: 50%;
     min-width: 0;
     background-color: unset;
     transform: translateX(-50%);
 }
-.overlay.eye-catcher > div {
+.eye-catcher > div {
     background-color: #61dafb;
 }
 

@@ -1,0 +1,24 @@
+.panel {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.2rem;
+    max-width: 20em;
+    transition: background-color 0.2s;
+}
+
+.panel:hover, .panel:focus {
+    background-color: white;
+}
+
+.panel > ul {
+    margin: 0;
+}
+
+.panel .label {
+    font-weight: bold;
+    margin-right: 2em;
+}
+
+.panel.info input {
+    width: 5em;
+    text-align: right;
+}

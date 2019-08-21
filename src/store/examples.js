@@ -7,6 +7,7 @@ import get from 'lodash.get';
 export const fetchExamples = createActionAsync('EXAMPLES_LIST', getExamplesList);
 
 // selectors
+export const isLoadingExamples = state => state.loading;
 export const getExamples = state => state.data;
 export const getExamplesCount = state => get(state, 'data.length', undefined);
 

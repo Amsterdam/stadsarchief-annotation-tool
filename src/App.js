@@ -1,21 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Home from "./pages/Home";
 import SingleExample from "./pages/SingleExample";
 import ExamplesGrid from "./pages/ExamplesGrid";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <Router>
       <div>
-        <nav className="top-navigation">
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/grid">Grid</Link></li>
-            <li><Link to="/annotator/">Annotator</Link></li>
-          </ul>
-        </nav>
+        <NavBar />
 
         <Route path="/" exact component={Home} />
         <Route path="/grid/" component={ExamplesGrid} />

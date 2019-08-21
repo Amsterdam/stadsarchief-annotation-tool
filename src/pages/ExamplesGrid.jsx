@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -56,7 +57,7 @@ const SingleTile = (example, classes) => {
   )
 };
 
-const ExamplesGrid = ({ examples }) => {
+const ExamplesGrid = ({ examples, isLoading }) => {
   const classes = useStyles();
 
   const nCols = 4;
@@ -64,12 +65,16 @@ const ExamplesGrid = ({ examples }) => {
   return (
     <div>
       <div>
-        <Filters />
+        <Filters direction="row"/>
       </div>
+
       <div className={classes.root}>
         <GridList cellHeight={400} cols={nCols} className={classes.gridList}>
           <GridListTile key="Subheader" cols={nCols} style={{ height: 'auto' }}>
-            <ListSubheader component="div">{get(examples, 'length', 0)} examples</ListSubheader>
+            <ListSubheader component="div">
+              {get(examples, 'length', 0)} examples
+              { isLoading && <CircularProgress />}
+            </ListSubheader>
           </GridListTile>
           {
             examples &&
@@ -84,7 +89,8 @@ const ExamplesGrid = ({ examples }) => {
 
 const mapState = (state) => {
   return {
-    examples: selectors.examples.getExamples(state)
+    examples: selectors.examples.getExamples(state),
+    isLoading: selectors.examples.isLoadingExamples(state),
   }
 };
 
