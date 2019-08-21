@@ -6,16 +6,15 @@ import './Annotation.css';
 const Annotation = ({url}) => {
   return <div className="annotation-container">
     <Img
-      src={[url, '/missing_image_symbol.png']}
+      src={[url, '/missing_image_symbol_large.png']}
       alt='item to label'
       className="full-img"
-      // loader={CircularProgress}
     />
   </div>
 };
 
 Annotation.defaultProps = {
-  url: '/missing_image_symbol.png'
+  url: '/missing_image_symbol_large.png'
 };
 
 Annotation.propTypes = {

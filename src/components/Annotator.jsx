@@ -1,14 +1,16 @@
+import {connect} from "react-redux";
 import React from 'react';
 import Annotation from './Annotation';
 import classNames from 'classnames';
 import get from 'lodash.get';
-import {getAnnotation, getBakedUrl, getExamplesList, getLocalUrl, putAnnotation} from '../api/generic_api';
+import {getAnnotation, getBakedUrl, getLocalUrl, putAnnotation} from '../api/generic_api';
 import NotificationArea from './NotificationArea';
 import './Annotator.css';
 import AnnotationList from "./AnnotationList";
 import Filters from "./Filters";
 import FoldPanel from "./FoldPanel";
 import arrayToObject from "../util/arrayToObject";
+import {selectors} from "../store";
 
 const availableTypes = [
   '',
@@ -80,7 +82,7 @@ class Annotator extends React.Component {
   }
 
   _changeAnnotation(index) {
-    const { count, examples } = this.state;
+    const { count, examples } = this.props;
 
     if (index < 0 || index >= count) {
       console.warn(`index outside of range: ${index}`);
@@ -226,19 +228,17 @@ class Annotator extends React.Component {
   }
 
   componentDidMount() {
-    getExamplesList().then(examples => {
-      this.setState({
-        count: examples.length,
-        examples
-      });
-
-      this._changeAnnotation(0);
-    });
 
     const element = this.annotationContainer;
     element.focus();
 
     this._addListeners(element)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.examples && this.props.examples) {
+      this._changeAnnotation(0);
+    }
   }
 
   render() {
@@ -247,7 +247,9 @@ class Annotator extends React.Component {
       stadsdeel: ['SA', 'SU', 'ST', undefined]
     };
 
-    const { count, currentId, currentIndex, isLoading, item, useLocalImages, notifications, showLabel, showPrediction } = this.state;
+    const { count } = this.state;
+
+    const { currentId, currentIndex, isLoading, item, useLocalImages, notifications, showLabel, showPrediction } = this.state;
     let url;
     if (item) {
       if (useLocalImages) {
@@ -384,4 +386,16 @@ class Annotator extends React.Component {
   }
 }
 
-export default Annotator;
+
+const mapState = (state) => {
+  return {
+    examples: selectors.examples.getExamples(state),
+    count: selectors.examples.getExamplesCount(state),
+  }
+};
+const mapDispatch = {};
+
+export default connect(
+  mapState,
+  mapDispatch
+)(Annotator);

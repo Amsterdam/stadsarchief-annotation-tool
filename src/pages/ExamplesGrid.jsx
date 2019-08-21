@@ -10,7 +10,9 @@ import {connect} from "react-redux";
 import {selectors} from "../store";
 import {getLocalUrl} from "../api/generic_api";
 import Filters from "../components/Filters";
-import AnnotationImage from "../components/AnnotationImage";
+import GridImage from "../components/ImageGrid/GridImage";
+import {Link} from "react-router-dom";
+import get from 'lodash.get';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,18 +29,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const MetaString = ({ tags }) => {
+  return <span>
+    { tags.map(({key, value}) => <span key={key}>{value}, </span>) }
+  </span>
+};
+
 const SingleTile = (example, classes) => {
   const url = getLocalUrl(example.reference);
+
   return (
     <GridListTile key={url}>
-      <AnnotationImage url={url} />
+      <GridImage url={url} />
       <GridListTileBar
         title={example.reference}
-        subtitle={<span>My meta data</span>}
+        subtitle={<MetaString tags={example.latest_tags} />}
         actionIcon={
-          <IconButton aria-label={`info about ${example.title}`} className={classes.icon}>
-            <ArrowForwardIcon />
-          </IconButton>
+          <Link to={`/annotator`}>
+            <IconButton aria-label={`info about ${example.title}`} className={classes.icon}>
+              <ArrowForwardIcon />
+            </IconButton>
+          </Link>
         }
       />
     </GridListTile>
@@ -48,20 +59,25 @@ const SingleTile = (example, classes) => {
 const ExamplesGrid = ({ examples }) => {
   const classes = useStyles();
 
-  const nCols = 3;
+  const nCols = 4;
 
   return (
-    <div className={classes.root}>
-      <Filters />
-      {
-        examples && examples.length &&
-        <GridList cellHeight={180} cols={nCols} className={classes.gridList}>
+    <div>
+      <div>
+        <Filters />
+      </div>
+      <div className={classes.root}>
+        <GridList cellHeight={400} cols={nCols} className={classes.gridList}>
           <GridListTile key="Subheader" cols={nCols} style={{ height: 'auto' }}>
-            <ListSubheader component="div">{examples.length} examples</ListSubheader>
+            <ListSubheader component="div">{get(examples, 'length', 0)} examples</ListSubheader>
           </GridListTile>
-          {examples.map(example => SingleTile(example, classes))}
+          {
+            examples &&
+            examples.length &&
+            examples.map(example => SingleTile(example, classes))
+          }
         </GridList>
-      }
+      </div>
     </div>
   );
 };

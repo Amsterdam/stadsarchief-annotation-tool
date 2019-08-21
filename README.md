@@ -2,6 +2,16 @@
 Annotation tool to quickly label images to a specific type.
 Focused on the Stadsarchief bouwdossier use case of distinguishing "bouwaanvragen" from other types.
 
+## Remaining work
+* Filtering
+  * Combine filters
+  * Filter on annotator
+  * Filter on conflicting annotations
+  * Filter by date range
+  * Filter on "Null" or "unset" values
+* API
+  * Handle vary large datasets (pagination and lazy loading) 
+
 
 ## Design choices
 

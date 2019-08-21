@@ -2,6 +2,7 @@ import React, {useState} from "react";
 
 import Img from 'react-image'
 import VisibilitySensor from 'react-visibility-sensor'
+import './GridImage.css';
 
 export default ({url}) => {
   const [wasVisible, setVisible] = useState(false);
@@ -18,8 +19,7 @@ export default ({url}) => {
         { wasVisible && <Img
           src={[url, '/missing_image_symbol.png']}
           alt='item to label'
-          className="full-img"
-          loading="lazy"
+          className='fill-width'
         />}
         <div>&nbsp;</div> { /* Required for visiblity sensor to trigger*/}
       </div>
