@@ -8,8 +8,9 @@ export const fetchExamples = createActionAsync('EXAMPLES_LIST', getExamplesList)
 
 // selectors
 export const isLoadingExamples = state => state.loading;
-export const getExamples = state => state.data;
-export const getExamplesCount = state => get(state, 'data.length', undefined);
+export const getExamples = state => get(state, 'data.results', undefined);
+export const getExamplesCount = state => get(state, 'data.results.length', undefined);
+export const getExamplesTotal = state => get(state, 'data.count', undefined);
 
 /*
 createReducerAsync takes an async action created by createActionAsync.

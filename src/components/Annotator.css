@@ -25,6 +25,10 @@
     right: 5em;
 }
 
+.top-right:nth-child(2) {
+    top: 15em;
+}
+
 .bottom-left {
     position: absolute;
     bottom: 5em;

@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import './FoldPanel.css';
@@ -37,16 +39,18 @@ class FoldPanel extends React.Component {
   }
 
   render() {
-    const {children} = this.props;
+    const {children, direction} = this.props;
     const { isOpen } = this.state;
     const header = children.find(child => child.type === Header);
     const body = children.find(child => child.type === Body);
     const panelName = header.props.children;
+    const DirectionIcon = direction == 'left' ? ChevronRightIcon : ChevronLeftIcon;
     return <div className="fold-panel">
       <Paper>
         <header onClick={this._toggle} title={isOpen ? `close ${panelName}` : `open ${panelName}`}>
           <IconButton className="toggle-icon">
-            { isOpen ? <ExpandLessIcon /> : <ChevronRightIcon /> }
+            { isOpen ?
+              <ExpandLessIcon /> : <DirectionIcon /> }
           </IconButton>
 
           { isOpen &&
@@ -67,5 +71,13 @@ class FoldPanel extends React.Component {
     </div>
   }
 }
+
+FoldPanel.defaultProps = {
+  direction: 'right'
+};
+
+FoldPanel.propTypes = {
+  direction: PropTypes.string
+};
 
 export default FoldPanel;

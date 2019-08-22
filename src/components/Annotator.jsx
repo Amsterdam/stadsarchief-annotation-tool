@@ -295,17 +295,30 @@ class Annotator extends React.Component {
       {/*</div>*/}
 
       <div className="top-right">
-        <Paper>
-          {item && <ExampleInfo example={item} /> }
-        </Paper>
-        <Paper>
-          <form onSubmit={this._onInfoSubmit.bind(this)}>
-            <ul>
-              <li><span className='label'>Current</span>{currentId}</li>
-              <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
-            </ul>
-          </form>
-        </Paper>
+        <FoldPanel>
+          <FoldPanel.Header>
+            Navigation
+          </FoldPanel.Header>
+          <FoldPanel.Body>
+            <form onSubmit={this._onInfoSubmit.bind(this)}>
+              <ul>
+                <li><span className='label'>Current</span>{currentId}</li>
+                <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
+              </ul>
+            </form>
+          </FoldPanel.Body>
+        </FoldPanel>
+      </div>
+
+      <div className="top-right">
+        <FoldPanel>
+          <FoldPanel.Header>
+            Info
+          </FoldPanel.Header>
+          <FoldPanel.Body>
+            {item && <ExampleInfo example={item} /> }
+          </FoldPanel.Body>
+        </FoldPanel>
       </div>
 
       <div className="eye-catcher panel">
@@ -334,7 +347,7 @@ class Annotator extends React.Component {
       </div>
 
       <div className="top-left">
-        <FoldPanel>
+        <FoldPanel direction={'left'}>
           <FoldPanel.Header>
             Filters
           </FoldPanel.Header>

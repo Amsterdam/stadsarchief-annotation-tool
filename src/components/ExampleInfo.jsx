@@ -33,6 +33,10 @@ const ExampleInfo = ({ example }) => {
               <TableCell align="right">{tags.dossier_nummer}</TableCell>
             </TableRow>
             <TableRow>
+              <TableCell component="th" scope="row">Sub dossier</TableCell>
+              <TableCell align="right">{tags.subdossier}</TableCell>
+            </TableRow>
+            <TableRow>
               <TableCell component="th" scope="row">Checked</TableCell>
               <TableCell align="right">{String(get(example, 'meta.checked'))}</TableCell>
             </TableRow>

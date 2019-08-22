@@ -18,8 +18,7 @@ export const getExamplesList = (filters={}) => {
   }
   const url = `${API_ROOT}data/example/?${params.toString()}`;
   return fetch(url)
-    .then(data => data.json())
-    .then(data => data.results);
+    .then(data => data.json());
 };
 
 export const getAnnotation = (url) => {

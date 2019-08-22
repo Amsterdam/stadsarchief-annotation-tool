@@ -7,6 +7,7 @@ const filtersSlice = createSlice({
     availableFilters: {
       type: ['aanvraag', 'besluit'],
       stadsdeel: ['SA', 'SU', 'ST'],
+      subdossier: ['Aanvraag en behandeling', 'Tekeningen', 'Adviezen, brandweer', 'Huisnummerbeschikking, documenten'],
       dossier_nummer: ['13325', '9061'],
     }
   },

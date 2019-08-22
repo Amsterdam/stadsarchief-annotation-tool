@@ -57,7 +57,7 @@ const SingleTile = (example, classes) => {
   )
 };
 
-const ExamplesGrid = ({ examples, isLoading }) => {
+const ExamplesGrid = ({ examples, isLoading, total }) => {
   const classes = useStyles();
 
   const nCols = 4;
@@ -72,7 +72,7 @@ const ExamplesGrid = ({ examples, isLoading }) => {
         <GridList cellHeight={400} cols={nCols} className={classes.gridList}>
           <GridListTile key="Subheader" cols={nCols} style={{ height: 'auto' }}>
             <ListSubheader component="div">
-              {get(examples, 'length', 0)} examples
+              {get(examples, 'length', 0)} / {total} examples
               { isLoading && <CircularProgress />}
             </ListSubheader>
           </GridListTile>
@@ -90,6 +90,7 @@ const ExamplesGrid = ({ examples, isLoading }) => {
 const mapState = (state) => {
   return {
     examples: selectors.examples.getExamples(state),
+    total: selectors.examples.getExamplesTotal(state),
     isLoading: selectors.examples.isLoadingExamples(state),
   }
 };
