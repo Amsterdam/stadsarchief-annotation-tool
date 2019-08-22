@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -12,6 +12,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 import {selectors} from "../store";
 import {clearAllFilters, clearFilter, setFilter} from "../store/filters";
 import Button from "@material-ui/core/Button/Button";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 
 const useStyles = makeStyles(theme => ({
   root: props => ({
@@ -62,6 +64,8 @@ const Filter = ({ classes, handleChange, label, values, activeValue, clearFilter
 const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter, setFilter, direction }) => {
   const classes = useStyles({direction});
 
+  const [filterConflict, setFilterConflict] = useState(false);
+
   const list = Object.entries(availableFilters);
   return (
     <form className={classes.root} autoComplete="off">
@@ -76,6 +80,36 @@ const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter
           classes={classes}
         />)
       }
+
+      <FormControl disabled className={classes.formControl}>
+        <InputLabel htmlFor="annotator-simple">annotator</InputLabel>
+        <Select
+          value={''}
+          onChange={() => {}}
+          inputProps={{
+            name: 'annotator',
+            id: 'annotator-simple',
+          }}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControlLabel
+        disabled
+        control={
+          <Checkbox
+            checked={filterConflict}
+            onChange={() => setFilterConflict(!filterConflict)}
+            value={filterConflict}
+            color="primary"
+          />
+        }
+        label="Conflicting"
+      />
+
       <Button variant="outlined" className={classes.button} onClick={e => clearAllFilters()}>
         Clear <ClearIcon />
       </Button>
