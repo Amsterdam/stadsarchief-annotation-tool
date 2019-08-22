@@ -9,6 +9,11 @@ import createStore from './store';
 import {Provider} from "react-redux";
 import {fetchExamples} from "./store/examples";
 
+import relativeTime from 'dayjs/plugin/relativeTime'
+import * as dayjs from "dayjs";
+dayjs.extend(relativeTime);
+
+
 const store = createStore();
 
 store.dispatch(fetchExamples());

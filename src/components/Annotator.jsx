@@ -12,8 +12,8 @@ import {selectors} from "../store";
 import './Annotator.css';
 import './panel.css';
 import ExampleInfo from "./ExampleInfo";
-import Paper from "@material-ui/core/Paper/Paper";
 import ShortcutsList from "./ShortcutsList";
+import AnnotationList from "./AnnotationList";
 
 
 const availableTypes = [
@@ -302,8 +302,8 @@ class Annotator extends React.Component {
           <FoldPanel.Body>
             <form onSubmit={this._onInfoSubmit.bind(this)}>
               <ul>
-                <li><span className='label'>Current</span>{currentId}</li>
-                <li><span className='label'>Index</span> {currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
+                <li><span className='label'>Current</span>&nbsp;{currentId}</li>
+                <li><span className='label'>Index</span>&nbsp;{currentIndex} / {count} jump to: <input type="number" min="0" name="idx"/></li>
               </ul>
             </form>
           </FoldPanel.Body>
@@ -343,7 +343,14 @@ class Annotator extends React.Component {
       </div>
 
       <div className="bottom-left">
-        {/*{ item && <AnnotationList annotations={item.annotations} /> }*/}
+        <FoldPanel direction={'left'}>
+          <FoldPanel.Header>
+            Annotations
+          </FoldPanel.Header>
+          <FoldPanel.Body>
+            { item && <AnnotationList annotations={item.annotations} /> }
+          </FoldPanel.Body>
+        </FoldPanel>
       </div>
 
       <div className="top-left">

@@ -44,7 +44,7 @@ class FoldPanel extends React.Component {
     const header = children.find(child => child.type === Header);
     const body = children.find(child => child.type === Body);
     const panelName = header.props.children;
-    const DirectionIcon = direction == 'left' ? ChevronRightIcon : ChevronLeftIcon;
+    const DirectionIcon = direction === 'left' ? ChevronRightIcon : ChevronLeftIcon;
     return <div className="fold-panel">
       <Paper>
         <header onClick={this._toggle} title={isOpen ? `close ${panelName}` : `open ${panelName}`}>

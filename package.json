@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.2.1",
     "classnames": "^2.2.6",
     "combine-selectors-redux": "^0.0.2",
+    "dayjs": "^1.8.15",
     "font-awesome": "4.7.0",
     "lodash": "4.17.15",
     "lodash.get": "^4.4.2",

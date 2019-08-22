@@ -20,43 +20,38 @@ const ExampleInfo = ({ example }) => {
   const confidence = get(example, 'meta.confidence');
 
   return (
-    <form>
-      <div>
-        <Table size="small">
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">Name</TableCell>
-              <TableCell align="right">{tags.file_name}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Dossier</TableCell>
-              <TableCell align="right">{tags.dossier_nummer}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Sub dossier</TableCell>
-              <TableCell align="right">{tags.subdossier}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Checked</TableCell>
-              <TableCell align="right">{String(get(example, 'meta.checked'))}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Document_type</TableCell>
-              <TableCell align="right"><span
-                className={classNames('highlight', dashedType, { 'empty': noType })}
-              >{type}</span></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      <ul>
-        {hasPrediction && <li>
-          <span className='label'>Prediction</span><span>{prediction} ({Number(confidence).toFixed(2)})</span>
-        </li>
+    <Table size="small">
+      <TableBody>
+        <TableRow>
+          <TableCell component="th" scope="row">Name</TableCell>
+          <TableCell align="right">{tags.file_name}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell component="th" scope="row">Dossier</TableCell>
+          <TableCell align="right">{tags.dossier_nummer}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell component="th" scope="row">Sub dossier</TableCell>
+          <TableCell align="right">{tags.subdossier}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell component="th" scope="row">Checked</TableCell>
+          <TableCell align="right">{String(get(example, 'meta.checked'))}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell component="th" scope="row">Document_type</TableCell>
+          <TableCell align="right"><span
+            className={classNames('highlight', dashedType, { 'empty': noType })}
+          >{type}</span></TableCell>
+        </TableRow>
+        {hasPrediction &&
+          <TableRow>
+            <TableCell component="th" scope="row">Prediction</TableCell>
+            <TableCell align="right">{prediction} ({Number(confidence).toFixed(2)})</TableCell>
+          </TableRow>
         }
-      </ul>
-    </form>
+      </TableBody>
+    </Table>
   );
 };
 

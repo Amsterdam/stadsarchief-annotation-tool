@@ -11,7 +11,7 @@ export const getLocalUrl = (filename) => {
 export const getExamplesList = (filters={}) => {
   const params = new URLSearchParams();
   params.set('page_size', 50);
-  params.set('ordering', '-id');
+  // params.set('ordering', '-id');
   for (const [key, value] of Object.entries(filters)) {
     params.set('tags__key', key);
     params.set('tags__value', value);
