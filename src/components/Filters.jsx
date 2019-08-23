@@ -81,22 +81,6 @@ const Filters = ({ activeFilters, availableFilters, clearAllFilters, clearFilter
         />)
       }
 
-      <FormControl disabled className={classes.formControl}>
-        <InputLabel htmlFor="annotator-simple">annotator</InputLabel>
-        <Select
-          value={''}
-          onChange={() => {}}
-          inputProps={{
-            name: 'annotator',
-            id: 'annotator-simple',
-          }}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-
       <FormControlLabel
         disabled
         control={

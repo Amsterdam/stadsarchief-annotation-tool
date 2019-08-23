@@ -22,7 +22,7 @@ const AnnotationList = ({annotations}) => {
       </TableHead>
       <TableBody>
         {
-          annotations.map(({author, tag, created_at, modified_at}) => (
+          annotations.filter(item => item.author).map(({author, tag, created_at, modified_at}) => (
             <TableRow key={tag.key + modified_at}>
               <TableCell component="th" scope="row">{tag.key}</TableCell>
               <TableCell align="right">{tag.value}</TableCell>

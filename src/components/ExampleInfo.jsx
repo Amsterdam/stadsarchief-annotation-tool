@@ -35,8 +35,8 @@ const ExampleInfo = ({ example }) => {
           <TableCell align="right">{tags.subdossier}</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell component="th" scope="row">Checked</TableCell>
-          <TableCell align="right">{String(get(example, 'meta.checked'))}</TableCell>
+          <TableCell component="th" scope="row">Stadsdeel</TableCell>
+          <TableCell align="right">{tags.stadsdeel_code}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th" scope="row">Document_type</TableCell>
@@ -44,6 +44,10 @@ const ExampleInfo = ({ example }) => {
             className={classNames('highlight', dashedType, { 'empty': noType })}
           >{type}</span></TableCell>
         </TableRow>
+        { tags.confidence && <TableRow>
+          <TableCell component="th" scope="row">Confidence</TableCell>
+          <TableCell align="right">{tags.confidence}</TableCell>
+        </TableRow> }
         {hasPrediction &&
           <TableRow>
             <TableCell component="th" scope="row">Prediction</TableCell>
