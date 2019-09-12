@@ -2,6 +2,10 @@
 Annotation tool to quickly label images to a specific type.
 Focused on the Stadsarchief bouwdossier use case of distinguishing "bouwaanvragen" from other types.
 
+
+Related to **back-end:** https://github.com/Amsterdam/annotation-server
+
+
 ## Remaining work
 * Filtering
   * Combine filters
